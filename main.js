@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { generateScene } from "./src/components/map";
 import { Character } from "./src/components/character";
 import { EventListener } from "./src/controls/eventListeners";
-import { CameraControls } from "./src/controls/cameraControls";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Setup
 const scene = new THREE.Scene();
@@ -13,8 +13,6 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
-const cameraControls = new CameraControls(camera);
-
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
@@ -22,10 +20,12 @@ document.body.appendChild(renderer.domElement);
 // Floor
 generateScene(scene);
 // Box
-var character = new Character(scene);
-var eventListener = new EventListener(character, cameraControls);
+var character = new Character(scene, camera);
+var eventListener = new EventListener(character);
 
-camera.position.z = 10;
+// Add OrbitControls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0, 0); // Set the orbit target to the center of the scene
 
 // mouse event listeners
 document.addEventListener(
@@ -42,37 +42,12 @@ document.addEventListener(
   },
   false
 );
-document.addEventListener(
-  "mousemove",
-  (event) => {
-    eventListener.onMouseMove(event);
-  },
-  false
-);
-document.addEventListener(
-  "wheel",
-  (event) => {
-    eventListener.onWheel(event);
-  },
-  false
-);
-document.addEventListener(
-  "mousedown",
-  (event) => {
-    eventListener.onMouseUp(event);
-  },
-  false
-);
-document.addEventListener(
-  "mouseup",
-  (event) => {
-    eventListener.onMouseDown(event);
-  },
-  false
-);
 
 function animate() {
   requestAnimationFrame(animate);
+  // Update orbit controls positions
+  controls.update();
+  character.updateCamera();
   renderer.render(scene, camera);
 }
 

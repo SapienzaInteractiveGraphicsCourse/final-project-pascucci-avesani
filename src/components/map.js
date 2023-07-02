@@ -27,7 +27,7 @@ function wall(scene) {
 
 export function generateScene(scene) {
   wall(scene);
-  const floorGeometry = new THREE.PlaneGeometry(100, 100);
+  const floorGeometry = new THREE.PlaneGeometry(10, 10);
   const floorMaterial = new THREE.MeshBasicMaterial({
     color: 0x808080,
     side: THREE.DoubleSide,

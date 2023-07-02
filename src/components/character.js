@@ -6,11 +6,15 @@ const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
 boxMesh.position.y = 0.5; // Move the box half of its height above the floor
 
 export class Character {
-  constructor(scene) {
-    this.moveSpeed = 0.05;
-    this.jumpSpeed = 0.05;
+  constructor(scene, camera) {
+    this.moveSpeed = 0.1;
+    this.jumpSpeed = 0.1;
     this.isJumping = false;
     this.jumpHeight = 0;
+    this.camera = camera;
+    // Position and rotate the camera
+    this.camera.position.z = 5;
+    this.camera.position.y = 2;
     scene.add(boxMesh);
   }
 
@@ -40,5 +44,11 @@ export class Character {
   }
   unsetSprint() {
     this.moveSpeed /= 4;
+  }
+
+  updateCamera() {
+    this.camera.position.x = boxMesh.position.x;
+    this.camera.position.z = boxMesh.position.z + 5;
+    this.camera.lookAt(boxMesh.position);
   }
 }
