@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { generateScene } from "./src/components/map";
 import { Character } from "./src/components/character";
-import * as eventListener from "./src/controls/eventListeners";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Setup
@@ -17,10 +16,10 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Floor
+// Create map
 generateScene(scene);
 
-// Box
+// Create character
 var character = new Character(scene, camera);
 
 // Add OrbitControls
@@ -32,7 +31,6 @@ controls.enableRotate = true;
 
 function animate() {
   requestAnimationFrame(animate);
-  // Update orbit controls positions
   character.movement();
   controls.update();
   character.updateCamera();

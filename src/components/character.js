@@ -1,11 +1,10 @@
 import * as THREE from "three";
-import * as eventListener from "../controls/eventListeners"
+import * as eventListener from "../controls/eventListeners";
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
 boxMesh.position.y = 0.5; // Move the box half of its height above the floor
-
 
 export class Character {
   constructor(scene, camera) {
@@ -23,8 +22,10 @@ export class Character {
 
   movement() {
     let activeKeys = eventListener.activeKeys;
-      // Move the box
-    const moveAmount = activeKeys.ShiftLeft ? this.moveSpeed * 3 : this.moveSpeed;
+    // Move the box
+    const moveAmount = activeKeys.ShiftLeft
+      ? this.moveSpeed * 3
+      : this.moveSpeed;
     if (activeKeys.KeyW) {
       boxMesh.position.z -= moveAmount;
     }
@@ -49,6 +50,7 @@ export class Character {
       if (this.jumpHeight >= Math.PI) {
         this.isJumping = false;
         this.jumpHeight = 0;
+        activeKeys;
       }
     }
   }
