@@ -1,37 +1,59 @@
-export class EventListener {
-  constructor(character) {
-    this.character = character;
 
-    this.keys = {};
+// Keyboard input
+const clickableKeys = {
+  KeyW: { code: "KeyW", color: 0xff0000 },
+  KeyS: { code: "KeyS", color: 0x00ff00 },
+  KeyA: { code: "KeyA", color: 0x0000ff },
+  KeyD: { code: "KeyD", color: 0xffff00 },
+  ShiftLeft: { code: "ShiftLeft", color: 0xff00ff },
+  Space: { code: "Space", color: 0x00ffff }
+};
+
+
+const keyElements = {};
+const keyContainer = document.createElement("div");
+keyContainer.style.position = "fixed";
+keyContainer.style.top = "10px";
+keyContainer.style.left = "10px";
+keyContainer.style.fontSize = "20px";
+keyContainer.style.color = "green";
+document.body.appendChild(keyContainer);
+
+for (const key in clickableKeys) {
+  const keyElement = document.createElement("span");
+  keyElement.textContent = key;
+  keyElement.style.marginRight = "10px";
+  keyElement.style.color = "green";
+  keyContainer.appendChild(keyElement);
+  keyElements[key] = keyElement;
+}
+
+const activeKeys = {};
+
+//Event listeners
+document.addEventListener("keydown", (event) => {
+  if (event.code in clickableKeys) {
+    activeKeys[event.code] = true;
+    updateKeyDisplay();
   }
+});
 
-  onKeyDown(event) {
-    this.keys[event.code] = true;
-
-    if (this.keys["Space"]) {
-      this.character.jump();
-    }
-    if (this.keys["KeyW"]) {
-      this.character.moveForward();
-    }
-    if (this.keys["KeyA"]) {
-      this.character.moveLeft();
-    }
-    if (this.keys["KeyS"]) {
-      this.character.moveBackward();
-    }
-    if (this.keys["KeyD"]) {
-      this.character.moveRignt();
-    }
-    if (this.keys["ShiftLeft"]) {
-      this.character.setSprint();
-    }
+document.addEventListener("keyup", (event) => {
+  if (event.code in clickableKeys) {
+    delete activeKeys[event.code];
+    updateKeyDisplay();
   }
+});
 
-  onKeyUp(event) {
-    if (this.keys["ShiftLeft"]) {
-      this.character.unsetSprint();
+function updateKeyDisplay() {
+  for (const key in clickableKeys) {
+    if (key in activeKeys) {
+      keyElements[key].style.color = "red";
+    } else {
+      keyElements[key].style.color = "green";
     }
-    this.keys[event.code] = false;
   }
 }
+
+export {activeKeys}
+

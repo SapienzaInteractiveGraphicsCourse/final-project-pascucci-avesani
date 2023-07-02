@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { generateScene } from "./src/components/map";
 import { Character } from "./src/components/character";
-import { EventListener } from "./src/controls/eventListeners";
+import * as eventListener from "./src/controls/eventListeners";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Setup
@@ -19,33 +19,21 @@ document.body.appendChild(renderer.domElement);
 
 // Floor
 generateScene(scene);
+
 // Box
 var character = new Character(scene, camera);
-var eventListener = new EventListener(character);
 
 // Add OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0); // Set the orbit target to the center of the scene
+controls.enableRotate = true;
 
-// mouse event listeners
-document.addEventListener(
-  "keydown",
-  (event) => {
-    eventListener.onKeyDown(event);
-  },
-  false
-);
-document.addEventListener(
-  "keyup",
-  (event) => {
-    eventListener.onKeyUp(event);
-  },
-  false
-);
+//Render loop
 
 function animate() {
   requestAnimationFrame(animate);
   // Update orbit controls positions
+  character.movement();
   controls.update();
   character.updateCamera();
   renderer.render(scene, camera);
