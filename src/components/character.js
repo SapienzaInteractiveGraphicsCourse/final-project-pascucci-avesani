@@ -15,10 +15,8 @@ export class Character {
   }
 
   jump() {
-    console.log("Jump!");
     this.jumpHeight += this.jumpSpeed;
     boxMesh.position.y = 0.5 + Math.sin(this.jumpHeight) * 1; // Adjust the jump height and speed here
-
     if (this.jumpHeight >= Math.PI) {
       this.isJumping = false;
       this.jumpHeight = 0;
@@ -41,7 +39,6 @@ export class Character {
     if (this.moveSpeed <= 0.05) this.moveSpeed *= 4;
   }
   unsetSprint() {
-    console.log("no more sprint!");
     this.moveSpeed /= 4;
   }
 }

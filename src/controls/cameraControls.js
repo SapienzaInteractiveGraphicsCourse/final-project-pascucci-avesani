@@ -33,6 +33,7 @@ export class CameraControls {
   handleMouseUp(event) {
     this.mouseDown = false;
   }
+
   handleWheel(event) {
     var delta = event.deltaY;
     this.pov.z += delta * 0.01;
