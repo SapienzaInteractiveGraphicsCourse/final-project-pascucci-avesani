@@ -19,7 +19,7 @@ let currentTorsoRotation = 0;
 /* // Initial character position
 boxMesh.position.y = 0.5; // Move the box half of its height above the floor
 boxMesh.position.x = -2;
-boxMesh.position.z = 5; */
+boxMesh.position.z = 5;*/
 
 const box = new THREE.Box3();
 
