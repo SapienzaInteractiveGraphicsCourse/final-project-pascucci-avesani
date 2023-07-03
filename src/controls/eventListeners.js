@@ -4,6 +4,7 @@ const clickableKeys = {
   KeyS: { code: "KeyS", color: 0x00ff00 },
   KeyA: { code: "KeyA", color: 0x0000ff },
   KeyD: { code: "KeyD", color: 0xffff00 },
+  KeyR: { code: "KeyR", color: 0xffff00 },
   ShiftLeft: { code: "ShiftLeft", color: 0xff00ff },
   Space: { code: "Space", color: 0x00ffff },
 };

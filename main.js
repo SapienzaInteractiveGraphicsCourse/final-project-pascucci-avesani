@@ -22,6 +22,11 @@ generateScene(scene);
 // Create character
 var character = new Character(scene, camera);
 
+// Create a directional light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(1, 1, 1);
+scene.add(directionalLight);
+
 // Add OrbitControls
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.target.set(0, 0, 0); // Set the orbit target to the center of the scene
@@ -31,7 +36,10 @@ controls.enableRotate = true;
 
 function animate() {
   requestAnimationFrame(animate);
+
   character.movement();
+  character.animation();
+  character.updateState();
   controls.update();
   character.updateCamera();
   renderer.render(scene, camera);
