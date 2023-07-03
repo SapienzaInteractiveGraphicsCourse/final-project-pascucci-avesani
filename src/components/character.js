@@ -1,10 +1,20 @@
 import * as THREE from "three";
 import * as eventListener from "../controls/eventListeners";
+import { isObjectColliding } from "./map";
 
+// Define character
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
 const boxMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
 const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+// Create character (square) box
+boxMesh.geometry.computeBoundingBox();
+
+// Initial character position
 boxMesh.position.y = 0.5; // Move the box half of its height above the floor
+boxMesh.position.x = -2;
+boxMesh.position.z = 5;
+
+const box = new THREE.Box3();
 
 export class Character {
   constructor(scene, camera) {
@@ -12,11 +22,12 @@ export class Character {
     this.jumpSpeed = 0.05;
     this.isJumping = false;
     this.jumpHeight = 0;
+    // Camera settings
     this.camera = camera;
-    // Position and rotate the camera
     this.camera.position.x = 0;
     this.camera.position.z = 5;
     this.camera.position.y = 2;
+    this.isColliding = false;
     scene.add(boxMesh);
   }
 
@@ -53,6 +64,13 @@ export class Character {
         activeKeys;
       }
     }
+
+    // Update the character box position, mandatory to call every time the character moves
+    box.copy(boxMesh.geometry.boundingBox).applyMatrix4(boxMesh.matrixWorld);
+
+    //Check if the object is colliding with map objects
+    this.isColliding = isObjectColliding(box);
+    console.log("Collisione:", this.isColliding);
   }
 
   updateCamera() {

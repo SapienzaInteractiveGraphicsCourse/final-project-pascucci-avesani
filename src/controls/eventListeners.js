@@ -1,4 +1,3 @@
-
 // Keyboard input
 const clickableKeys = {
   KeyW: { code: "KeyW", color: 0xff0000 },
@@ -6,9 +5,8 @@ const clickableKeys = {
   KeyA: { code: "KeyA", color: 0x0000ff },
   KeyD: { code: "KeyD", color: 0xffff00 },
   ShiftLeft: { code: "ShiftLeft", color: 0xff00ff },
-  Space: { code: "Space", color: 0x00ffff }
+  Space: { code: "Space", color: 0x00ffff },
 };
-
 
 const keyElements = {};
 const keyContainer = document.createElement("div");
@@ -55,5 +53,4 @@ function updateKeyDisplay() {
   }
 }
 
-export {activeKeys}
-
+export { activeKeys };
