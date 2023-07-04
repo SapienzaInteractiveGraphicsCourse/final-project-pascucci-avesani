@@ -54,16 +54,32 @@ var coordinatesArray = [
   560, 560, 560, 80, 600, 80, 560, 200, 600, 200, 560, 400, 600, 400,
 ];
 //Reduce maze dimensions
-coordinatesArray = coordinatesArray.map((coord) => Math.abs(coord / 10));
+coordinatesArray = coordinatesArray.map((coord) => Math.abs(coord / 2));
 
 const wallsGeometry = {};
 const wallMaterials = {};
 const wallMeshes = {};
 const wallBoxes = {};
 
+// Configure textures
+const wallTtexture = new THREE.TextureLoader().load(
+  "src/images/textures/stoneWall.jpg"
+);
+wallTtexture.wrapS = THREE.RepeatWrapping;
+wallTtexture.wrapT = THREE.RepeatWrapping;
+wallTtexture.repeat.set(1, 1);
+
+const wallBumpMap = new THREE.TextureLoader().load(
+  "src/images/textures/stoneWallNormalMap.png"
+);
+wallBumpMap.wrapS = THREE.RepeatWrapping;
+wallBumpMap.wrapT = THREE.RepeatWrapping;
+wallBumpMap.repeat.set(1, 1);
+
 // Draw the maze
 function maze(scene) {
-  const height = 6;
+  const height = 10;
+  const width = 1;
 
   for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
     // Initialize wall boxes
@@ -74,13 +90,23 @@ function maze(scene) {
       Math.abs(coordinatesArray[i + 1] - coordinatesArray[i + 3])
     );
 
-    wallsGeometry[j] = new THREE.BoxGeometry(length, height, 1);
-    wallMaterials[j] = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      side: THREE.DoubleSide,
-    });
+    wallsGeometry[j] = new THREE.BoxGeometry(length, height, width);
+    console.log(wallsGeometry[j].faces);
+
+    wallMaterials[j] = [
+      new THREE.MeshBasicMaterial({
+        map: wallTtexture,
+      }),
+      new THREE.MeshBasicMaterial({ map: wallTtexture }), //left side
+      new THREE.MeshBasicMaterial({ color: "#ffffff" }), //top side
+      new THREE.MeshBasicMaterial({ color: "#ffffff" }), //bottom side
+      new THREE.MeshBasicMaterial({ map: wallTtexture }), //front side
+      new THREE.MeshBasicMaterial({ map: wallTtexture }), //back side
+    ];
+    wallMaterials[j].bumpMap = wallBumpMap;
 
     wallMeshes[j] = new THREE.Mesh(wallsGeometry[j], wallMaterials[j]);
+
     if (coordinatesArray[i] == coordinatesArray[i + 2]) {
       wallMeshes[j].rotation.y = Math.PI / 2;
       wallMeshes[j].position.x = -coordinatesArray[i];
@@ -101,7 +127,7 @@ function maze(scene) {
 
 // Draw the floor
 function floor(scene) {
-  const floorGeometry = new THREE.PlaneGeometry(100, 100);
+  const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
   const floorMaterial = new THREE.MeshBasicMaterial({
     color: 0x808080,
     side: THREE.DoubleSide,
@@ -111,6 +137,17 @@ function floor(scene) {
   floorMesh.position.x = -25;
   floorMesh.position.z = -25;
   scene.add(floorMesh);
+
+  const ceilingGeometry = new THREE.PlaneGeometry(1000, 1000, 1);
+  const ceilingMaterial = new THREE.MeshBasicMaterial({
+    color: "#0000FF",
+    side: THREE.DoubleSide,
+  });
+  const ceilingMesh = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+  ceilingMesh.rotation.x = Math.PI / 2; // Rotate the floor to be horizontal
+  ceilingMesh.position.y = 10;
+
+  scene.add(ceilingMesh);
 }
 
 export function generateScene(scene) {
