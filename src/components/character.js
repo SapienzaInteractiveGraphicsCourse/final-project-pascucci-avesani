@@ -14,12 +14,13 @@ let currentHeadRotation = 0;
 let currentTorsoRotation = 0;
 
 // Create character hit box
-const geometry = new THREE.BoxGeometry(0.8, 3.8, 0.5);
+const geometry = new THREE.BoxGeometry(0.8, 1.9, 0.5);
 const material = new THREE.MeshBasicMaterial({
   transparent: true,
   opacity: 0.5,
 });
 const characterCube = new THREE.Mesh(geometry, material);
+characterCube.position.y = 0.95;
 characterCube.geometry.computeBoundingBox();
 const characterBox = new THREE.Box3();
 
@@ -190,7 +191,6 @@ export class Character {
   }
 
   idle() {
-    const model = group.children[1];
     // Rotate the neck slightly
     const neck = model.getObjectByName("Neck");
     if (neck) {
@@ -231,7 +231,6 @@ export class Character {
   }
 
   walk() {
-    const model = group.children[1];
     // Calculate a time-based value for the leg and arm movement
     const time = Date.now() * 0.001;
     const legRotation = Math.sin(time * 4) * Math.PI * 0.2;
@@ -279,7 +278,6 @@ export class Character {
   }
 
   run() {
-    const model = group.children[1];
     // Calculate a time-based value for the leg and arm movement
     const time = Date.now() * 0.001;
     const legRotation = Math.sin(time * 8) * Math.PI * 0.5;
