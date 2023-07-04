@@ -64,9 +64,8 @@ export class Character {
       }
     );
 
-    this.group = group;
-
     this.state = "idle";
+    this.lastMovement = false;
   }
 
   movement() {
@@ -77,6 +76,7 @@ export class Character {
       : this.moveSpeed;
 
     const rotFactor = Math.PI * 0.05;
+    //console.log(activeKeys);
 
     if (activeKeys.KeyW) {
       if (group.rotation.y > 0 && group.rotation.y < Math.PI)
@@ -84,8 +84,8 @@ export class Character {
       else if (group.rotation.y >= Math.PI && group.rotation.y < 2 * Math.PI)
         group.rotation.y += rotFactor;
       if (group.rotation.y == 2 * Math.PI) group.rotation.y = 0;
-
-      group.position.z -= moveAmount;
+      if (!(this.isColliding && this.lastMovement.KeyW))
+        group.position.z -= moveAmount;
     }
     if (activeKeys.KeyS) {
       if (group.rotation.y >= 0 && group.rotation.y < Math.PI)
@@ -93,10 +93,10 @@ export class Character {
       else if (group.rotation.y > Math.PI && group.rotation.y < 2 * Math.PI) {
         group.rotation.y -= rotFactor;
       }
-
-      group.position.z += moveAmount;
+      if (!(this.isColliding && this.lastMovement.KeyS))
+        group.position.z += moveAmount;
     }
-    if (activeKeys.KeyA) {
+    if (activeKeys.KeyD) {
       if (activeKeys.KeyW) group.rotation.y = (Math.PI * 7) / 4;
       else if (activeKeys.KeyS) group.rotation.y = (Math.PI * 5) / 4;
       else {
@@ -113,10 +113,10 @@ export class Character {
         )
           group.rotation.y += rotFactor;
       }
-
-      group.position.x -= moveAmount;
+      if (!(this.isColliding && this.lastMovement.KeyD))
+        group.position.x += moveAmount;
     }
-    if (activeKeys.KeyD) {
+    if (activeKeys.KeyA) {
       if (activeKeys.KeyW) group.rotation.y = Math.PI / 4;
       else if (activeKeys.KeyS) group.rotation.y = (Math.PI * 3) / 4;
       else {
@@ -128,8 +128,8 @@ export class Character {
         )
           group.rotation.y -= rotFactor;
       }
-
-      group.position.x += moveAmount;
+      if (!(this.isColliding && this.lastMovement.KeyA))
+        group.position.x -= moveAmount;
     }
 
     if (activeKeys.KeyR) {
@@ -152,11 +152,14 @@ export class Character {
     }
 
     // Update the character box position, mandatory to call every time the character moves
-    //box.copy(model.geometry.boundingBox).applyMatrix4(model.matrixWorld);
+    characterBox
+      .copy(characterCube.geometry.boundingBox)
+      .applyMatrix4(characterCube.matrixWorld);
 
-    //Check if the object is colliding with map objects
-    //this.isColliding = isObjectColliding(characterBox);
-    //console.log("Collisione:", this.isColliding);
+    //Check for collisions
+    if (isObjectColliding(characterBox) && !this.isColliding)
+      this.lastMovement = { ...activeKeys };
+    this.isColliding = isObjectColliding(characterBox);
 
     if (group) console.log(group.rotation.y);
   }
