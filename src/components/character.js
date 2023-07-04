@@ -43,6 +43,7 @@ export class Character {
       const desiredScale = 1;
       model.scale.set(desiredScale, desiredScale, desiredScale);
       model.rotateY(Math.PI);
+      model.rotation.y = 0;
 
       model.position.set(-2, 0, 5);
     
@@ -51,6 +52,8 @@ export class Character {
       console.error(error);
     });
 
+    this.model = model;
+    
     this.state = "idle";
   }
 
@@ -60,24 +63,60 @@ export class Character {
     const moveAmount = activeKeys.ShiftLeft
       ? this.moveSpeed * 3
       : this.moveSpeed;
+    
+    const rotFactor = Math.PI * 0.05;
+
     if (activeKeys.KeyW) {
-      if (model.rotation.y > 0)
-        model.rotation.y -= Math.PI * 0.05;
-      else
+  
+      if (model.rotation.y > 0 && model.rotation.y < Math.PI)
+        model.rotation.y -= rotFactor;
+      else if (model.rotation.y >= Math.PI && model.rotation.y < 2 * Math.PI)
+        model.rotation.y += rotFactor;
+      if (model.rotation.y == 2 * Math.PI)
         model.rotation.y = 0;
+        
       model.position.z -= moveAmount;
     }
     if (activeKeys.KeyS) {
-      if (model.rotation.y < Math.PI)
-        model.rotation.y += Math.PI * 0.05;
-      else
-        model.rotation.y = Math.PI;
+      if (model.rotation.y >= 0 && model.rotation.y < Math.PI)
+        model.rotation.y += rotFactor;
+      else if (model.rotation.y > Math.PI && model.rotation.y < 2 * Math.PI){
+        model.rotation.y -= rotFactor;
+      }
+      
       model.position.z += moveAmount;
     }
     if (activeKeys.KeyA) {
+
+      if (activeKeys.KeyW)
+        model.rotation.y = Math.PI * 7 / 4;
+      else if(activeKeys.KeyS)
+        model.rotation.y = Math.PI * 5 / 4;
+      else {
+        if (model.rotation.y > - Math.PI / 2 && model.rotation.y <= Math.PI / 2){
+          model.rotation.y -= rotFactor;
+          if(model.rotation.y == - Math.PI / 2)
+            model.rotation.y = Math.PI * 3 / 2
+        }
+        else if (model.rotation.y > Math.PI / 2 && model.rotation.y < Math.PI * 3 / 2)
+          model.rotation.y += rotFactor;
+      }
+
       model.position.x -= moveAmount;
     }
     if (activeKeys.KeyD) {
+
+      if (activeKeys.KeyW)
+        model.rotation.y = Math.PI / 4;
+      else if(activeKeys.KeyS)
+        model.rotation.y = Math.PI * 3 / 4;
+      else {
+        if (model.rotation.y > - Math.PI / 2 && model.rotation.y < Math.PI / 2)
+          model.rotation.y += rotFactor;
+        else if (model.rotation.y > Math.PI / 2 && model.rotation.y <= Math.PI * 3 / 2)
+          model.rotation.y -= rotFactor;
+      }
+      
       model.position.x += moveAmount;
     }
 
@@ -105,29 +144,31 @@ export class Character {
 
     //Check if the object is colliding with map objects
     this.isColliding = isObjectColliding(box);
-    console.log("Collisione:", this.isColliding);
+    //console.log("Collisione:", this.isColliding);
+
+    if(model)console.log(model.rotation.y)
   }
 
   animation() {
   // Calculate a time-based value for the leg and arm movement
   const time = Date.now() * 0.001;
 
-  if (this.state == "idle")
+  if (this.state == "idle" && model)
     this.idle();
-
   else if (this.state == "walking")
     this.walk();
 
   else if (this.state == "running")
     this.run();
-  else
-    console.log("undefined state!");
+
+  else if (this.state == "jumping")
+    this.run();
   }
 
   updateCamera() {
     if(model) this.camera.position.x = model.position.x;
-    if(model) this.camera.position.z = model.position.z + 4;
-    if(model) this.camera.lookAt(model.position);
+    if(model) this.camera.position.z = model.position.z + 3.5;
+    if(model) this.camera.lookAt(this.camera.position);
   }
 
   updateState() {
