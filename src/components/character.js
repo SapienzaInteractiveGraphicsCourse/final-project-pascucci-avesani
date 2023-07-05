@@ -29,16 +29,19 @@ const group = new THREE.Group();
 
 const box = new THREE.Box3();
 
+var currentPosition = new THREE.Vector3();
+var currentLookAt = new THREE.Vector3();
+
 export class Character {
   constructor(scene, camera) {
     this.moveSpeed = 0.05;
-    this.jumpSpeed = 0.05;
+    this.jumpSpeed = 0.04;
     this.isJumping = false;
     this.jumpHeight = 0;
     // Camera settings
     this.camera = camera;
-    this.camera.position.x = 0;
-    this.camera.position.z = 5;
+    this.camera.position.x = -2;
+    this.camera.position.z = 10;
     this.camera.position.y = 2;
     this.isColliding = false;
 
@@ -48,13 +51,13 @@ export class Character {
         model = gltf.scene;
 
         // Set the desired scale for the model
-        const desiredScale = 1;
-        model.scale.set(desiredScale, desiredScale, desiredScale);
-        model.rotateY(Math.PI);
+        group.add(model, characterCube);
 
-        group.add(characterCube, model);
+        const desiredScale = 1;
+        group.scale.set(desiredScale, desiredScale, desiredScale);
+
         group.position.set(-2, 0, 5);
-        group.rotation.y = 0;
+        group.rotateY(Math.PI);
 
         scene.add(group);
       },
@@ -66,38 +69,41 @@ export class Character {
 
     this.state = "idle";
     this.lastMovement = false;
+
+    this.deceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
+    this.acceleration = new THREE.Vector3(1, 0.25, 50.0);
+    this.velocity = new THREE.Vector3(0, 0, 0);
   }
 
   movement() {
     let activeKeys = eventListener.activeKeys;
-    // Move the box
+
     const moveAmount = activeKeys.ShiftLeft
       ? this.moveSpeed * 3
       : this.moveSpeed;
 
     const rotFactor = Math.PI * 0.05;
-    //console.log(activeKeys);
 
     if (activeKeys.KeyW) {
-      if (group.rotation.y > 0 && group.rotation.y < Math.PI)
+      /* if (group.rotation.y > 0 && group.rotation.y < Math.PI)
         group.rotation.y -= rotFactor;
       else if (group.rotation.y >= Math.PI && group.rotation.y < 2 * Math.PI)
         group.rotation.y += rotFactor;
-      if (group.rotation.y == 2 * Math.PI) group.rotation.y = 0;
+      if (group.rotation.y == 2 * Math.PI) group.rotation.y = 0; */
       if (!(this.isColliding && this.lastMovement.KeyW))
         group.position.z -= moveAmount;
     }
     if (activeKeys.KeyS) {
-      if (group.rotation.y >= 0 && group.rotation.y < Math.PI)
+      /* if (group.rotation.y >= 0 && group.rotation.y < Math.PI)
         group.rotation.y += rotFactor;
       else if (group.rotation.y > Math.PI && group.rotation.y < 2 * Math.PI) {
         group.rotation.y -= rotFactor;
-      }
+      }  */
       if (!(this.isColliding && this.lastMovement.KeyS))
         group.position.z += moveAmount;
     }
     if (activeKeys.KeyD) {
-      if (activeKeys.KeyW) group.rotation.y = (Math.PI * 7) / 4;
+      /* if (activeKeys.KeyW) group.rotation.y = (Math.PI * 7) / 4;
       else if (activeKeys.KeyS) group.rotation.y = (Math.PI * 5) / 4;
       else {
         if (
@@ -112,12 +118,12 @@ export class Character {
           group.rotation.y < (Math.PI * 3) / 2
         )
           group.rotation.y += rotFactor;
-      }
+      } */
       if (!(this.isColliding && this.lastMovement.KeyD))
         group.position.x += moveAmount;
     }
     if (activeKeys.KeyA) {
-      if (activeKeys.KeyW) group.rotation.y = Math.PI / 4;
+      /* if (activeKeys.KeyW) group.rotation.y = Math.PI / 4;
       else if (activeKeys.KeyS) group.rotation.y = (Math.PI * 3) / 4;
       else {
         if (group.rotation.y > -Math.PI / 2 && group.rotation.y < Math.PI / 2)
@@ -127,7 +133,7 @@ export class Character {
           group.rotation.y <= (Math.PI * 3) / 2
         )
           group.rotation.y -= rotFactor;
-      }
+      } */
       if (!(this.isColliding && this.lastMovement.KeyA))
         group.position.x -= moveAmount;
     }
@@ -142,12 +148,11 @@ export class Character {
     }
 
     if (this.isJumping) {
-      this.jumpHeight += this.jumpSpeed;
-      group.position.y = Math.sin(this.jumpHeight) * 1; // Adjust the jump height and speed here
-      if (this.jumpHeight >= Math.PI) {
+      this.jumpHeight += this.jumpSpeed * 2;
+      group.position.y = Math.sin(this.jumpHeight) + 30; // Adjust the jump height and speed here
+      if (this.jumpHeight >= 20 * Math.PI) {
         this.isJumping = false;
         this.jumpHeight = 0;
-        activeKeys;
       }
     }
 
@@ -160,24 +165,111 @@ export class Character {
     if (isObjectColliding(characterBox) && !this.isColliding)
       this.lastMovement = { ...activeKeys };
     this.isColliding = isObjectColliding(characterBox);
+  }
 
-    if (group) console.log(group.rotation.y);
+  movement2(timeInSeconds) {
+
+    const activeKeys = eventListener.activeKeys;
+
+    if (activeKeys.Space && !this.isJumping) {
+      this.isJumping = true;
+    }
+
+    if (this.isJumping) {
+      this.jumpHeight += this.jumpSpeed;
+      group.position.y = Math.sin(this.jumpHeight) * 5; // Adjust the jump height and speed here
+      if (this.jumpHeight >= Math.PI) {
+        this.isJumping = false;
+        this.jumpHeight = 0;
+        activeKeys;
+      }
+    }
+
+    const velocity = this.velocity;
+    const frameDecceleration = new THREE.Vector3(
+        velocity.x * this.deceleration.x,
+        velocity.y * this.deceleration.y,
+        velocity.z * this.deceleration.z
+    );
+    frameDecceleration.multiplyScalar(timeInSeconds);
+    frameDecceleration.z = Math.sign(frameDecceleration.z) * Math.min(
+        Math.abs(frameDecceleration.z), Math.abs(velocity.z));
+
+    velocity.add(frameDecceleration);
+
+    const controlObject = group;
+    const Q = new THREE.Quaternion();
+    const A = new THREE.Vector3();
+    const R = controlObject.quaternion.clone();
+
+    const acc = this.acceleration.clone();
+    if (activeKeys.ShiftLeft) {
+      acc.multiplyScalar(2.5);
+    }
+
+    if (this.state == "idle") {
+      acc.multiplyScalar(0.0);
+      velocity.multiplyScalar(0.0);
+    }
+
+    if (activeKeys.KeyW) {
+      velocity.z += acc.z * timeInSeconds * 0.5;
+    }
+    if (activeKeys.KeyS) {
+      velocity.z -= acc.z * timeInSeconds * 0.5;
+    }
+    if (activeKeys.KeyA) {
+      A.set(0, 1, 0);
+      Q.setFromAxisAngle(A, 4.0 * Math.PI * timeInSeconds * this.acceleration.y);
+      R.multiply(Q);
+    }
+    if (activeKeys.KeyD) {
+      A.set(0, 1, 0);
+      Q.setFromAxisAngle(A, 4.0 * -Math.PI * timeInSeconds * this.acceleration.y);
+      R.multiply(Q);
+    }
+
+    controlObject.quaternion.copy(R);
+
+    const oldPosition = new THREE.Vector3();
+    oldPosition.copy(controlObject.position);
+
+    const forward = new THREE.Vector3(0, 0, 1);
+    forward.applyQuaternion(controlObject.quaternion);
+    forward.normalize();
+
+    const sideways = new THREE.Vector3(1, 0, 0);
+    sideways.applyQuaternion(controlObject.quaternion);
+    sideways.normalize();
+
+    sideways.multiplyScalar(velocity.x * timeInSeconds);
+    forward.multiplyScalar(velocity.z * timeInSeconds);
+
+    controlObject.position.add(forward);
+    controlObject.position.add(sideways);
+
+    oldPosition.copy(controlObject.position);
+
+    const idealOffSet = new THREE.Vector3(-1, 2, -4);
+    idealOffSet.applyQuaternion(controlObject.quaternion);
+    idealOffSet.add(controlObject.position);
+
+    const idealLookAt = new THREE.Vector3(0, 1, 5);
+    idealLookAt.applyQuaternion(controlObject.quaternion);
+    idealLookAt.add(controlObject.position);
+
+    this.camera.position.copy(idealOffSet);
+    this.camera.lookAt(idealLookAt);
   }
 
   animation() {
     // Calculate a time-based value for the leg and arm movement
     const time = Date.now() * 0.001;
 
-    if (this.state == "idle" && group.children[1]) this.idle();
+    if (this.state == "idle" && model) this.idle();
     else if (this.state == "walking") this.walk();
     else if (this.state == "running") this.run();
     else if (this.state == "jumping") this.run();
-  }
-
-  updateCamera() {
-    if (group) this.camera.position.x = group.position.x;
-    if (group) this.camera.position.z = group.position.z + 3.5;
-    if (group) this.camera.lookAt(this.camera.position);
   }
 
   updateState() {

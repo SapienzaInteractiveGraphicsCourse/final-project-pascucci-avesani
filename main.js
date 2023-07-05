@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { generateScene } from "./src/components/map";
 import { Character } from "./src/components/character";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
 
 // Setup
 const scene = new THREE.Scene();
@@ -19,6 +19,9 @@ document.body.appendChild(renderer.domElement);
 // Create map
 generateScene(scene);
 
+// Create Clock
+const clock = new THREE.Clock();
+
 // Create character
 var character = new Character(scene, camera);
 
@@ -27,21 +30,18 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(1, 1, 1);
 scene.add(directionalLight);
 
-// Add OrbitControls
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, 0); // Set the orbit target to the center of the scene
-controls.enableRotate = true;
+
 
 //Render loop
 
-function animate() {
+function animate(currentTime) {
+
   requestAnimationFrame(animate);
 
-  character.movement();
   character.animation();
   character.updateState();
-  controls.update();
-  character.updateCamera();
+  character.movement2(clock.getDelta());
+
   renderer.render(scene, camera);
 }
 
