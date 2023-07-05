@@ -91,7 +91,6 @@ function maze(scene) {
     );
 
     wallsGeometry[j] = new THREE.BoxGeometry(length, height, width);
-    console.log(wallsGeometry[j].faces);
 
     wallMaterials[j] = [
       new THREE.MeshBasicMaterial({

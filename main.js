@@ -1,9 +1,8 @@
 import * as THREE from "three";
 import { generateScene } from "./src/components/map";
 import { Character } from "./src/components/character";
-import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls'
 
-// Setup
+// Camera and scene setup
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -11,9 +10,14 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   50
 );
-camera.setFocalLength(20);
+camera.position.x = -2;
+camera.position.z = -10;
+camera.position.y = 2;
+
+// Set game window size
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
+
 document.body.appendChild(renderer.domElement);
 
 // Create map
@@ -30,17 +34,12 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
 directionalLight.position.set(1, 1, 1);
 scene.add(directionalLight);
 
-
-
 //Render loop
-
-function animate(currentTime) {
-
+function animate() {
   requestAnimationFrame(animate);
-
   character.animation();
   character.updateState();
-  character.movement2(clock.getDelta());
+  character.movement(clock.getDelta());
 
   renderer.render(scene, camera);
 }
