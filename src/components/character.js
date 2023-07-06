@@ -4,7 +4,7 @@ import { isObjectColliding } from "./map";
 import { CharacterAnimation } from "./animation";
 
 // Create character hit box
-const geometry = new THREE.BoxGeometry(0.8, 1.9, 0.5);
+const geometry = new THREE.BoxGeometry(1.8 , 1.9, 1.3);
 const material = new THREE.MeshBasicMaterial({
   transparent: true,
   opacity: 0,
@@ -49,7 +49,7 @@ export class Character extends CharacterAnimation {
       if (this.jumpHeight >= Math.PI) {
         this.isJumping = false;
         this.jumpHeight = 0;
-        activeKeys;
+        group.position.y = 0;
       }
     }
 
@@ -82,12 +82,12 @@ export class Character extends CharacterAnimation {
     }
 
     if (activeKeys.KeyW)
-      if (!(this.isColliding && this.lastMovement.KeyW))
+      if (!(this.isColliding))
         velocity.z += acc.z * timeInSeconds * 0.5;
       else velocity.z = 0;
 
     if (activeKeys.KeyS) {
-      if (!(this.isColliding && this.lastMovement.KeyS))
+      if (!(this.isColliding))
         velocity.z -= acc.z * timeInSeconds * 0.5;
       else velocity.z = 0;
     }

@@ -65,16 +65,16 @@ const wallBoxes = {};
 const wallTtexture = new THREE.TextureLoader().load(
   "src/images/textures/stoneWall.jpg"
 );
-wallTtexture.wrapS = THREE.RepeatWrapping;
-wallTtexture.wrapT = THREE.RepeatWrapping;
-wallTtexture.repeat.set(1, 1);
 
-const wallBumpMap = new THREE.TextureLoader().load(
-  "src/images/textures/stoneWallNormalMap.png"
+const wallTtexture2 = new THREE.TextureLoader().load(
+  "src/images/textures/stoneWall.jpg"
 );
-wallBumpMap.wrapS = THREE.RepeatWrapping;
-wallBumpMap.wrapT = THREE.RepeatWrapping;
-wallBumpMap.repeat.set(1, 1);
+
+const wallTtexture3 = new THREE.TextureLoader().load(
+  "src/images/textures/stoneWall.jpg"
+);
+
+
 
 // Draw the maze
 function maze(scene) {
@@ -91,18 +91,30 @@ function maze(scene) {
     );
 
     wallsGeometry[j] = new THREE.BoxGeometry(length, height, width);
+    
+    let activeTexture;
+    if (length <= 20){
+      activeTexture = wallTtexture;
+    }
+    else {
+      wallTtexture2.wrapS = THREE.RepeatWrapping;
+      wallTtexture2.wrapT = THREE.RepeatWrapping;
+      wallTtexture2.repeat.set(length / 20, 1);
+      activeTexture = wallTtexture2;
+    }
+
+    wallTtexture3.wrapS = THREE.RepeatWrapping;
+    wallTtexture3.wrapT = THREE.RepeatWrapping;
+    wallTtexture3.repeat.set(0.2, 1);
 
     wallMaterials[j] = [
-      new THREE.MeshBasicMaterial({
-        map: wallTtexture,
-      }),
-      new THREE.MeshBasicMaterial({ map: wallTtexture }), //left side
+      new THREE.MeshPhongMaterial({ map: wallTtexture3 }),
+      new THREE.MeshPhongMaterial({ map: wallTtexture3 }), //left side
       new THREE.MeshBasicMaterial({ color: "#ffffff" }), //top side
       new THREE.MeshBasicMaterial({ color: "#ffffff" }), //bottom side
-      new THREE.MeshBasicMaterial({ map: wallTtexture }), //front side
-      new THREE.MeshBasicMaterial({ map: wallTtexture }), //back side
+      new THREE.MeshPhongMaterial({ map: activeTexture }), //front side
+      new THREE.MeshPhongMaterial({ map: activeTexture }), //back side
     ];
-    wallMaterials[j].bumpMap = wallBumpMap;
 
     wallMeshes[j] = new THREE.Mesh(wallsGeometry[j], wallMaterials[j]);
 

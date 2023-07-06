@@ -30,9 +30,8 @@ const clock = new THREE.Clock();
 var character = new Character(scene, camera);
 
 // Create a directional light
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(1, 1, 1);
-scene.add(directionalLight);
+let light = new THREE.AmbientLight(0xeeeeee, 0.6);
+scene.add(light);
 
 //Render loop
 function animate() {
