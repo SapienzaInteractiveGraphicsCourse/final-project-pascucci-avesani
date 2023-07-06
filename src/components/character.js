@@ -7,7 +7,7 @@ import { CharacterAnimation } from "./animation";
 const geometry = new THREE.BoxGeometry(0.8, 1.9, 0.5);
 const material = new THREE.MeshBasicMaterial({
   transparent: true,
-  opacity: 0.5,
+  opacity: 0,
 });
 const characterCube = new THREE.Mesh(geometry, material);
 characterCube.position.y = 0.95;

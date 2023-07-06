@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-let model;
+let model, flashLight;
 
 // Define character
 const loader = new GLTFLoader();
@@ -19,27 +19,64 @@ let currentTorsoRotation = 0;
 
 export class CharacterAnimation {
   constructor(scene, characterCube) {
-    this.loadModel(scene, characterCube);
+    this.initialize(scene, characterCube);
+    this.loadFlashLight();
+  }
+
+  async initialize(scene, characterCube) {
+    try {
+      await this.loadModel(scene, characterCube);
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   loadModel(scene, characterCube) {
-    loader.load(
-      "../../assets/Male_01_V01.glb",
-      function (gltf) {
-        model = gltf.scene;
+    return new Promise((resolve, reject) => {
+      loader.load(
+        "../../assets/Male_01_V01.glb",
+        function (gltf) {
+          model = gltf.scene;
 
-        // Set the desired scale for the model
-        group.add(model, characterCube);
-        group.scale.set(desiredScale, desiredScale, desiredScale);
-        group.rotateY(Math.PI);
-        group.position.set(-2, 0, 5);
-        scene.add(group);
-      },
-      undefined,
-      function (error) {
-        console.error(error);
-      }
-    );
+          // Set the desired scale for the model
+          group.add(model, characterCube);
+          group.scale.set(desiredScale, desiredScale, desiredScale);
+          group.rotateY(Math.PI);
+          group.position.set(-2, 0, 5);
+          scene.add(group);
+        },
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    });
+  }
+
+  loadFlashLight() {
+    return new Promise((resolve, reject) => {
+      loader.load(
+        "../../assets/flashLight.glb",
+
+        function (gltf) {
+          flashLight = gltf.scene;
+          model
+            .getObjectByName("RightHand")
+            .add(flashLight.getObjectByName("Sketchfab_model"));
+
+          const flashlightModel = model.getObjectByName("Sketchfab_model");
+          flashlightModel.scale.set(0.03, 0.03, 0.03);
+          flashlightModel.position.set(0, 0.07, 0.01);
+          for (let i = 1; i < 6; i++)
+            model.getObjectByName("RightHand").children[i].rotateX(2);
+        },
+
+        undefined,
+        function (error) {
+          console.error(error);
+        }
+      );
+    });
   }
 
   animation() {
