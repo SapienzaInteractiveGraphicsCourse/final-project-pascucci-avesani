@@ -97,7 +97,6 @@ export class Character extends CharacterAnimation {
       else movingState[0] = -1;
     } else {
       for (let i = 0; i < collidingObjects.length; i++) {
-        console.log(collidingObjects[i]);
         if (collidingObjects[i][1] == collidingObjects[i][3]) {
           if (z < oldPosition.z && movingState[1] == 1)
             controlObject.position.z = oldPosition.z;
@@ -108,6 +107,49 @@ export class Character extends CharacterAnimation {
             controlObject.position.x = oldPosition.x;
           else if (x > oldPosition.x && movingState[0] == -1) {
             controlObject.position.x = oldPosition.x;
+          }
+        }
+
+        if (collidingObjects[i][1] == collidingObjects[i][3]) {
+          if (
+            !(
+              Math.abs(x) <
+                Math.max(
+                  (Math.abs(collidingObjects[i][0]),
+                  Math.abs(collidingObjects[i][2]))
+                ) &&
+              Math.abs(x) >
+                Math.min(
+                  Math.abs(collidingObjects[i][0]),
+                  Math.abs(collidingObjects[i][2])
+                )
+            )
+          ) {
+            if (x < oldPosition.x && movingState[0] == 1)
+              controlObject.position.x = oldPosition.x;
+            else if (x > oldPosition.x && movingState[0] == -1) {
+              controlObject.position.x = oldPosition.x;
+            }
+          }
+        } else if (collidingObjects[i][0] == collidingObjects[i][2]) {
+          if (
+            !(
+              Math.abs(z) <
+                Math.max(
+                  (Math.abs(collidingObjects[i][1]),
+                  Math.abs(collidingObjects[i][3]))
+                ) &&
+              Math.abs(z) >
+                Math.min(
+                  Math.abs(collidingObjects[i][1]),
+                  Math.abs(collidingObjects[i][3])
+                )
+            )
+          ) {
+            if (z < oldPosition.z && movingState[1] == 1)
+              controlObject.position.z = oldPosition.z;
+            else if (z > oldPosition.z && movingState[1] == -1)
+              controlObject.position.z = oldPosition.z;
           }
         }
       }
