@@ -20,63 +20,71 @@ let currentTorsoRotation = 0;
 export class CharacterAnimation {
   constructor(scene, characterCube) {
     this.initialize(scene, characterCube);
-    this.loadFlashLight();
+    //this.loadFlashLight();
   }
 
   async initialize(scene, characterCube) {
-    try {
-      await this.loadModel(scene, characterCube);
-    } catch (error) {
-      console.error(error);
-    }
+    this.loadModel(scene, characterCube);
+    this.startCheckingCondition();
   }
 
   loadModel(scene, characterCube) {
-    return new Promise((resolve, reject) => {
-      loader.load(
-        "../../assets/Male_01_V01.glb",
-        function (gltf) {
-          model = gltf.scene;
+    loader.load(
+      "../../assets/Male_01_V01.glb",
+      function (gltf) {
+        model = gltf.scene;
 
-          // Set the desired scale for the model
-          group.add(model, characterCube);
-          group.scale.set(desiredScale, desiredScale, desiredScale);
-          group.rotateY(Math.PI);
-          group.position.set(-2, 0, 5);
-          scene.add(group);
-        },
-        undefined,
-        function (error) {
-          console.error(error);
-        }
-      );
-    });
+        // Set the desired scale for the model
+        group.add(model, characterCube);
+        group.scale.set(desiredScale, desiredScale, desiredScale);
+        group.rotateY(Math.PI);
+        group.position.set(-2, 0, 5);
+        scene.add(group);
+      },
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      function (error) {
+        console.error(error);
+      }
+    );
+  }
+
+  startCheckingCondition() {
+    const interval = setInterval(checkCondition, 1000);
+    const load = this.loadFlashLight;
+    function checkCondition() {
+      if (model) {
+        load();
+        clearInterval(interval);
+      }
+    }
   }
 
   loadFlashLight() {
-    return new Promise((resolve, reject) => {
-      loader.load(
-        "../../assets/flashLight.glb",
+    loader.load(
+      "../../assets/flashLight.glb",
 
-        function (gltf) {
-          flashLight = gltf.scene;
-          model
-            .getObjectByName("RightHand")
-            .add(flashLight.getObjectByName("Sketchfab_model"));
+      function (gltf) {
+        console.log("Loading flashlight");
+        flashLight = gltf.scene;
+        model
+          .getObjectByName("RightHand")
+          .add(flashLight.getObjectByName("Sketchfab_model"));
 
-          const flashlightModel = model.getObjectByName("Sketchfab_model");
-          flashlightModel.scale.set(0.03, 0.03, 0.03);
-          flashlightModel.position.set(0, 0.07, 0.01);
-          for (let i = 1; i < 6; i++)
-            model.getObjectByName("RightHand").children[i].rotateX(2);
-        },
-
-        undefined,
-        function (error) {
-          console.error(error);
-        }
-      );
-    });
+        const flashlightModel = model.getObjectByName("Sketchfab_model");
+        flashlightModel.scale.set(0.03, 0.03, 0.03);
+        flashlightModel.position.set(0, 0.07, 0.01);
+        for (let i = 1; i < 6; i++)
+          model.getObjectByName("RightHand").children[i].rotateX(2);
+      },
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+      },
+      function (error) {
+        console.error(error);
+      }
+    );
   }
 
   animation() {
