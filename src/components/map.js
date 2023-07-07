@@ -74,11 +74,9 @@ const wallTtexture3 = new THREE.TextureLoader().load(
   "src/images/textures/stoneWall.jpg"
 );
 
-
-
 // Draw the maze
 function maze(scene) {
-  const height = 10;
+  const height = 6;
   const width = 1;
 
   for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
@@ -91,12 +89,11 @@ function maze(scene) {
     );
 
     wallsGeometry[j] = new THREE.BoxGeometry(length, height, width);
-    
+
     let activeTexture;
-    if (length <= 20){
+    if (length <= 20) {
       activeTexture = wallTtexture;
-    }
-    else {
+    } else {
       wallTtexture2.wrapS = THREE.RepeatWrapping;
       wallTtexture2.wrapT = THREE.RepeatWrapping;
       wallTtexture2.repeat.set(length / 20, 1);
@@ -168,11 +165,19 @@ export function generateScene(scene) {
 
 // Calculate if a given box is colliding with Map objects
 export function isObjectColliding(box) {
+  const collidingObjects = [];
   for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
     wallBoxes[j]
       .copy(wallMeshes[j].geometry.boundingBox)
       .applyMatrix4(wallMeshes[j].matrixWorld);
-    if (box.intersectsBox(wallBoxes[j])) return true;
+    if (box.intersectsBox(wallBoxes[j])) {
+      collidingObjects.push([
+        coordinatesArray[i],
+        coordinatesArray[i + 1],
+        coordinatesArray[i + 2],
+        coordinatesArray[i + 3],
+      ]);
+    }
   }
-  return false;
+  return collidingObjects;
 }

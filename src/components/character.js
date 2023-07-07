@@ -4,7 +4,7 @@ import { isObjectColliding } from "./map";
 import { CharacterAnimation } from "./animation";
 
 // Create character hit box
-const geometry = new THREE.BoxGeometry(1.8 , 1.9, 1.3);
+const geometry = new THREE.BoxGeometry(1.8, 1.9, 1.3);
 const material = new THREE.MeshBasicMaterial({
   transparent: true,
   opacity: 0,
@@ -14,9 +14,6 @@ characterCube.position.y = 0.95;
 characterCube.geometry.computeBoundingBox();
 const characterBox = new THREE.Box3();
 
-// Used to group together character and box
-let group = new THREE.Group();
-
 export class Character extends CharacterAnimation {
   constructor(scene, camera) {
     super(scene, characterCube);
@@ -25,90 +22,31 @@ export class Character extends CharacterAnimation {
     this.jumpSpeed = 0.04;
     this.isJumping = false;
     this.jumpHeight = 0;
-    this.isColliding = false;
 
     this.state = "idle";
-    this.lastMovement = {};
-
+    this.movingState = [0, 0];
     this.deceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
     this.acceleration = new THREE.Vector3(1, 0.25, 50.0);
     this.velocity = new THREE.Vector3(0, 0, 0);
-    group = this.getGroup();
   }
 
   movement(timeInSeconds) {
-    const activeKeys = eventListener.activeKeys;
+    this.handleKeyEvents(timeInSeconds);
+    this.jump();
 
-    if (activeKeys.Space && !this.isJumping) {
-      this.isJumping = true;
-    }
-
-    if (this.isJumping) {
-      this.jumpHeight += this.jumpSpeed;
-      group.position.y = Math.sin(this.jumpHeight) * 5; // Adjust the jump height and speed here
-      if (this.jumpHeight >= Math.PI) {
-        this.isJumping = false;
-        this.jumpHeight = 0;
-        group.position.y = 0;
-      }
-    }
-
-    const velocity = this.velocity;
+    const { velocity, deceleration } = this;
     const frameDecceleration = new THREE.Vector3(
-      velocity.x * this.deceleration.x,
-      velocity.y * this.deceleration.y,
-      velocity.z * this.deceleration.z
+      velocity.x * deceleration.x,
+      velocity.y * deceleration.y,
+      velocity.z * deceleration.z
     );
     frameDecceleration.multiplyScalar(timeInSeconds);
     frameDecceleration.z =
       Math.sign(frameDecceleration.z) *
       Math.min(Math.abs(frameDecceleration.z), Math.abs(velocity.z));
-
     velocity.add(frameDecceleration);
 
-    const controlObject = group;
-    const Q = new THREE.Quaternion();
-    const A = new THREE.Vector3();
-    const R = controlObject.quaternion.clone();
-
-    const acc = this.acceleration.clone();
-    if (activeKeys.ShiftLeft) {
-      acc.multiplyScalar(2.5);
-    }
-
-    if (this.state == "idle") {
-      acc.multiplyScalar(0.0);
-      velocity.multiplyScalar(0.0);
-    }
-
-    if (activeKeys.KeyW)
-      if (!(this.isColliding))
-        velocity.z += acc.z * timeInSeconds * 0.5;
-      else velocity.z = 0;
-
-    if (activeKeys.KeyS) {
-      if (!(this.isColliding))
-        velocity.z -= acc.z * timeInSeconds * 0.5;
-      else velocity.z = 0;
-    }
-    if (activeKeys.KeyA) {
-      A.set(0, 1, 0);
-      Q.setFromAxisAngle(
-        A,
-        4.0 * Math.PI * timeInSeconds * this.acceleration.y
-      );
-      R.multiply(Q);
-    }
-    if (activeKeys.KeyD) {
-      A.set(0, 1, 0);
-      Q.setFromAxisAngle(
-        A,
-        4.0 * -Math.PI * timeInSeconds * this.acceleration.y
-      );
-      R.multiply(Q);
-    }
-
-    controlObject.quaternion.copy(R);
+    const controlObject = this.group;
 
     const oldPosition = new THREE.Vector3();
     oldPosition.copy(controlObject.position);
@@ -127,6 +65,12 @@ export class Character extends CharacterAnimation {
     controlObject.position.add(forward);
     controlObject.position.add(sideways);
 
+    characterBox
+      .copy(characterCube.geometry.boundingBox)
+      .applyMatrix4(characterCube.matrixWorld);
+
+    this.handleCollision(controlObject, oldPosition);
+
     oldPosition.copy(controlObject.position);
 
     const idealOffSet = new THREE.Vector3(-1, 2, -4);
@@ -139,16 +83,90 @@ export class Character extends CharacterAnimation {
 
     this.camera.position.copy(idealOffSet);
     this.camera.lookAt(idealLookAt);
+  }
 
-    // Update the character box position, mandatory to call every time the character moves
-    characterBox
-      .copy(characterCube.geometry.boundingBox)
-      .applyMatrix4(characterCube.matrixWorld);
+  handleCollision(controlObject, oldPosition) {
+    let { movingState } = this;
+    const { x, z } = controlObject.position;
+    const collidingObjects = isObjectColliding(characterBox);
 
-    //Check for collisions
-    if (isObjectColliding(characterBox) && !this.isColliding)
-      this.lastMovement = { ...activeKeys };
-    this.isColliding = isObjectColliding(characterBox);
+    if (collidingObjects == 0) {
+      if (z < oldPosition.z) movingState[1] = 1;
+      else movingState[1] = -1;
+      if (x < oldPosition.x) movingState[0] = 1;
+      else movingState[0] = -1;
+    } else {
+      for (let i = 0; i < collidingObjects.length; i++) {
+        console.log(collidingObjects[i]);
+        if (collidingObjects[i][1] == collidingObjects[i][3]) {
+          if (z < oldPosition.z && movingState[1] == 1)
+            controlObject.position.z = oldPosition.z;
+          else if (z > oldPosition.z && movingState[1] == -1)
+            controlObject.position.z = oldPosition.z;
+        } else if (collidingObjects[i][0] == collidingObjects[i][2]) {
+          if (x < oldPosition.x && movingState[0] == 1)
+            controlObject.position.x = oldPosition.x;
+          else if (x > oldPosition.x && movingState[0] == -1) {
+            controlObject.position.x = oldPosition.x;
+          }
+        }
+      }
+    }
+  }
+
+  handleKeyEvents(timeInSeconds) {
+    const { velocity, group } = this;
+    const { activeKeys } = eventListener;
+    const acc = this.acceleration.clone();
+
+    const Q = new THREE.Quaternion();
+    const A = new THREE.Vector3();
+    const R = group.quaternion.clone();
+
+    if (activeKeys.ShiftLeft) acc.multiplyScalar(2.5);
+    for (const key in activeKeys) {
+      switch (key) {
+        case "KeyW":
+          velocity.z += acc.z * timeInSeconds * 0.5;
+          break;
+        case "KeyS":
+          velocity.z -= acc.z * timeInSeconds * 0.5;
+          break;
+        case "Space":
+          if (!this.isJumping) this.isJumping = true;
+          break;
+        case "KeyA":
+          A.set(0, 1, 0);
+          Q.setFromAxisAngle(
+            A,
+            4.0 * Math.PI * timeInSeconds * this.acceleration.y
+          );
+          R.multiply(Q);
+          break;
+        case "KeyD":
+          A.set(0, 1, 0);
+          Q.setFromAxisAngle(
+            A,
+            4.0 * -Math.PI * timeInSeconds * this.acceleration.y
+          );
+          R.multiply(Q);
+          break;
+      }
+    }
+    group.quaternion.copy(R);
+  }
+
+  jump() {
+    let { group } = this;
+    if (this.isJumping) {
+      this.jumpHeight += this.jumpSpeed;
+      group.position.y = Math.sin(this.jumpHeight) * 5; // Adjust the jump height and speed here
+      if (this.jumpHeight >= Math.PI) {
+        this.isJumping = false;
+        this.jumpHeight = 0;
+        group.position.y = 0;
+      }
+    }
   }
 
   updateState() {

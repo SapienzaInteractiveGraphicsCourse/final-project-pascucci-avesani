@@ -7,7 +7,7 @@ let model, flashLight;
 const loader = new GLTFLoader();
 
 // Used to group together character and box
-const group = new THREE.Group();
+//const group = new THREE.Group();
 
 const desiredScale = 1;
 
@@ -19,21 +19,31 @@ let currentTorsoRotation = 0;
 
 export class CharacterAnimation {
   constructor(scene, characterCube) {
+    this.group = new THREE.Group();
     this.initialize(scene, characterCube);
-    //this.loadFlashLight();
   }
 
-  async initialize(scene, characterCube) {
+  initialize(scene, characterCube) {
+    const interval = setInterval(checkCondition, 1000);
+    const load = this.loadFlashLight;
+
     this.loadModel(scene, characterCube);
-    this.startCheckingCondition();
+
+    // Wait for the model to be loaded and initialized
+    function checkCondition() {
+      if (model) {
+        load();
+        clearInterval(interval);
+      }
+    }
   }
 
   loadModel(scene, characterCube) {
+    const group = this.group;
     loader.load(
       "../../assets/Male_01_V01.glb",
       function (gltf) {
         model = gltf.scene;
-
         // Set the desired scale for the model
         group.add(model, characterCube);
         group.scale.set(desiredScale, desiredScale, desiredScale);
@@ -48,17 +58,6 @@ export class CharacterAnimation {
         console.error(error);
       }
     );
-  }
-
-  startCheckingCondition() {
-    const interval = setInterval(checkCondition, 1000);
-    const load = this.loadFlashLight;
-    function checkCondition() {
-      if (model) {
-        load();
-        clearInterval(interval);
-      }
-    }
   }
 
   loadFlashLight() {
@@ -214,9 +213,6 @@ export class CharacterAnimation {
     const torsoRotationDelta = torsoRotation - currentTorsoRotation;
     currentTorsoRotation += torsoRotationDelta * 0.1;
 
-    // Calculate leaning angle based on leg rotation
-    const leaningAngle = legRotation * 0.1;
-
     // Rotate the left and right legs
     const leftLeg = model.getObjectByName("LeftLeg");
     const rightLeg = model.getObjectByName("RightLeg");
@@ -245,9 +241,5 @@ export class CharacterAnimation {
       // Apply leaning to the torso
       torso1.rotation.x = Math.PI * 0.1;
     }
-  }
-
-  getGroup() {
-    return group;
   }
 }
