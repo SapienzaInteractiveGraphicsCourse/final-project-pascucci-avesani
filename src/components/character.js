@@ -4,7 +4,7 @@ import { isObjectColliding } from "./map";
 import { CharacterAnimation } from "./animation";
 
 // Create character hit box
-const geometry = new THREE.BoxGeometry(1.8, 1.9, 1.3);
+const geometry = new THREE.BoxGeometry(1.6, 1.9, 1.2);
 const material = new THREE.MeshBasicMaterial({
   transparent: true,
   opacity: 0,
@@ -16,6 +16,7 @@ const characterBox = new THREE.Box3();
 
 export class Character extends CharacterAnimation {
   constructor(scene, camera) {
+
     super(scene, characterCube);
     this.camera = camera;
     this.moveSpeed = 0.05;
@@ -28,6 +29,7 @@ export class Character extends CharacterAnimation {
     this.deceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
     this.acceleration = new THREE.Vector3(1, 0.25, 50.0);
     this.velocity = new THREE.Vector3(0, 0, 0);
+    
   }
 
   movement(timeInSeconds) {
@@ -202,7 +204,7 @@ export class Character extends CharacterAnimation {
     let { group } = this;
     if (this.isJumping) {
       this.jumpHeight += this.jumpSpeed;
-      group.position.y = Math.sin(this.jumpHeight) * 5; // Adjust the jump height and speed here
+      group.position.y = Math.sin(this.jumpHeight) * 4; // Adjust the jump height and speed here
       if (this.jumpHeight >= Math.PI) {
         this.isJumping = false;
         this.jumpHeight = 0;

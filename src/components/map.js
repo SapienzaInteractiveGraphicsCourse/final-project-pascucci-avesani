@@ -54,7 +54,7 @@ var coordinatesArray = [
   560, 560, 560, 80, 600, 80, 560, 200, 600, 200, 560, 400, 600, 400,
 ];
 //Reduce maze dimensions
-coordinatesArray = coordinatesArray.map((coord) => Math.abs(coord / 2));
+coordinatesArray = coordinatesArray.map((coord) => Math.abs(coord / 4));
 
 const wallsGeometry = {};
 const wallMaterials = {};
@@ -62,22 +62,75 @@ const wallMeshes = {};
 const wallBoxes = {};
 
 // Configure textures
-const wallTtexture = new THREE.TextureLoader().load(
-  "src/images/textures/stoneWall.jpg"
-);
+const loader = new THREE.TextureLoader();
 
-const wallTtexture2 = new THREE.TextureLoader().load(
-  "src/images/textures/stoneWall.jpg"
-);
+const wallTtexture = [
+  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg"), 
+  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_normal.jpg"),
+  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_ambientOcclusion.jpg")
+];
 
-const wallTtexture3 = new THREE.TextureLoader().load(
-  "src/images/textures/stoneWall.jpg"
-);
+const wallTtexture2 = [
+  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg"), 
+  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_normal.jpg"),
+  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_ambientOcclusion.jpg")
+];
+
+const wallTtexture3 = [
+  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg"), 
+  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_normal.jpg"),
+  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_ambientOcclusion.jpg")
+];
+
+let floorBaseColor, floorAmbientOcclusion, floorHeight, floorNormal;
+
+let floorTextures = [
+  floorBaseColor = loader.load("assets/floorText/Concrete_017_baseColor.jpg"),
+  floorAmbientOcclusion = loader.load("assets/floorText/Concrete_017_ambientOcclusion.jpg"),
+  floorNormal = loader.load("assets/floorText/Concrete_017_normal.jpg"),
+  floorHeight = loader.load("assets/floorText/Concrete_017_height.png")
+];
+
+floorTextures.forEach(texture => {
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(30, 30);
+});
+
+let ceilingBaseColor, ceilingAmbientOcclusion, ceilingHeight, ceilingNormal;
+
+const ceilingTextures = [
+  ceilingBaseColor = loader.load("../../assets/ceilingText/Concrete_Ceiling_002_basecolor.jpg"),
+  ceilingNormal = loader.load("../../assets/ceilingText/Concrete_Ceiling_002_normal.jpg"),
+  ceilingHeight = loader.load("../../assets/ceilingText/Concrete_Ceiling_002_height.png"),
+  ceilingAmbientOcclusion = loader.load("../../assets/ceilingText/Concrete_Ceiling_002_ambientOcclusion.jpg")
+];
+
+ceilingTextures.forEach(texture => {
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(7, 7);
+});
+
+const background = loader.load("assets/High_resolution_wallpaper_background_ID_77701837927.png");
 
 // Draw the maze
 function maze(scene) {
-  const height = 6;
+  const height = 7;
   const width = 1;
+
+  const invisibleWallGeometry = new THREE.BoxGeometry(10, height, 0.1);
+  const invisibleWallMaterial = new THREE.MeshBasicMaterial({
+    wireframe: true
+  });
+
+  const invisibleWallStartMesh = new THREE.Mesh(invisibleWallGeometry, invisibleWallMaterial);
+  invisibleWallStartMesh.position.set(-5, 3.5, 0);
+  wallMeshes[coordinatesArray.length] = invisibleWallStartMesh;
+  
+  const invisibleWallEndMesh = new THREE.Mesh(invisibleWallGeometry, invisibleWallMaterial);
+  invisibleWallEndMesh.position.set(-145, 3.5, -150);
+  wallMeshes[coordinatesArray.length + 1] = invisibleWallEndMesh;
 
   for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
     // Initialize wall boxes
@@ -88,29 +141,53 @@ function maze(scene) {
       Math.abs(coordinatesArray[i + 1] - coordinatesArray[i + 3])
     );
 
-    wallsGeometry[j] = new THREE.BoxGeometry(length, height, width);
+    wallsGeometry[j] = new THREE.BoxGeometry(length, height, width, 64, 64);
 
     let activeTexture;
     if (length <= 20) {
       activeTexture = wallTtexture;
     } else {
-      wallTtexture2.wrapS = THREE.RepeatWrapping;
-      wallTtexture2.wrapT = THREE.RepeatWrapping;
-      wallTtexture2.repeat.set(length / 20, 1);
+      wallTtexture2.forEach(texture => {
+        texture.wrapS = THREE.RepeatWrapping;
+        texture.wrapT = THREE.RepeatWrapping;
+        texture.repeat.set(length / 20, 1);
+      });
       activeTexture = wallTtexture2;
     }
 
-    wallTtexture3.wrapS = THREE.RepeatWrapping;
-    wallTtexture3.wrapT = THREE.RepeatWrapping;
-    wallTtexture3.repeat.set(0.2, 1);
+    wallTtexture3.forEach(texture => {
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(0.2, 1);
+    });
 
     wallMaterials[j] = [
-      new THREE.MeshPhongMaterial({ map: wallTtexture3 }),
-      new THREE.MeshPhongMaterial({ map: wallTtexture3 }), //left side
+      new THREE.MeshStandardMaterial({ 
+        map: wallTtexture3[0],
+        normalMap: wallTtexture3[1],
+        aoMap: wallTtexture3[2],
+        aoMapIntensity: 1.5
+       }),
+      new THREE.MeshStandardMaterial({
+        map: wallTtexture3[0],
+        normalMap: wallTtexture3[1],
+        aoMap: wallTtexture3[2],
+        aoMapIntensity: 1.5
+      }), //left side
       new THREE.MeshBasicMaterial({ color: "#ffffff" }), //top side
       new THREE.MeshBasicMaterial({ color: "#ffffff" }), //bottom side
-      new THREE.MeshPhongMaterial({ map: activeTexture }), //front side
-      new THREE.MeshPhongMaterial({ map: activeTexture }), //back side
+      new THREE.MeshStandardMaterial({ 
+        map: activeTexture[0],
+        normalMap: activeTexture[1],
+        aoMap: activeTexture[2],
+        aoMapIntensity: 1.5
+      }), //front side
+      new THREE.MeshStandardMaterial({ 
+        map: activeTexture[0],
+        normalMap: activeTexture[1],
+        aoMap: activeTexture[2],
+        aoMapIntensity: 1.5
+      }), //back side
     ];
 
     wallMeshes[j] = new THREE.Mesh(wallsGeometry[j], wallMaterials[j]);
@@ -130,30 +207,41 @@ function maze(scene) {
     // Create wall box
     wallMeshes[j].geometry.computeBoundingBox();
     scene.add(wallMeshes[j]);
+
   }
+  scene.add(wallMeshes[coordinatesArray.length]);
+  scene.add(wallMeshes[coordinatesArray.length+1]);
+  wallBoxes[coordinatesArray.length] = wallBoxes[coordinatesArray.length+1] = new THREE.Box3();
+  
 }
 
 // Draw the floor
 function floor(scene) {
-  const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
-  const floorMaterial = new THREE.MeshBasicMaterial({
-    color: 0x808080,
+  const floorGeometry = new THREE.PlaneGeometry(152, 152);
+  const floorMaterial = new THREE.MeshStandardMaterial({
+    map: floorBaseColor,
     side: THREE.DoubleSide,
+    normalMap: floorNormal,
+    aoMap: floorAmbientOcclusion,
+    aoMapIntensity: 5
   });
   const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
   floorMesh.rotation.x = Math.PI / 2; // Rotate the floor to be horizontal
-  floorMesh.position.x = -25;
-  floorMesh.position.z = -25;
+  floorMesh.position.x = -75;
+  floorMesh.position.z = -75;
   scene.add(floorMesh);
 
-  const ceilingGeometry = new THREE.PlaneGeometry(1000, 1000, 1);
-  const ceilingMaterial = new THREE.MeshBasicMaterial({
-    color: "#0000FF",
-    side: THREE.DoubleSide,
+  const ceilingGeometry = new THREE.BoxGeometry(152, 3, 152, 1024, 1024);
+  const ceilingMaterial = new THREE.MeshStandardMaterial({
+    map: ceilingBaseColor,
+    normalMap: ceilingNormal,
+    displacementMap: ceilingHeight,
+    displacementScale: 0.4,
+    aoMap: ceilingAmbientOcclusion,
+    aoMapIntensity: 1.5
   });
   const ceilingMesh = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
-  ceilingMesh.rotation.x = Math.PI / 2; // Rotate the floor to be horizontal
-  ceilingMesh.position.y = 10;
+  ceilingMesh.position.set(-75, 8.5, -75);
 
   scene.add(ceilingMesh);
 }
@@ -161,6 +249,7 @@ function floor(scene) {
 export function generateScene(scene) {
   maze(scene);
   floor(scene);
+  scene.background = background;
 }
 
 // Calculate if a given box is colliding with Map objects

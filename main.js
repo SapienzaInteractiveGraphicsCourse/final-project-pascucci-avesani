@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { generateScene } from "./src/components/map";
 import { Character } from "./src/components/character";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 // Camera and scene setup
 const scene = new THREE.Scene();
@@ -8,7 +9,7 @@ const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
-  50
+  1000
 );
 camera.position.x = -2;
 camera.position.z = -10;
@@ -30,8 +31,14 @@ const clock = new THREE.Clock();
 var character = new Character(scene, camera);
 
 // Create a directional light
-let light = new THREE.AmbientLight(0xeeeeee, 0.6);
-scene.add(light);
+let dirlight = new THREE.DirectionalLight(0xffffff, 0.7);
+dirlight.position.set(100, 100, 100);
+scene.add(dirlight);
+
+let ambient = new THREE.AmbientLight(0xffffff, 0.3);
+scene.add(ambient);
+
+//
 
 //Render loop
 function animate() {
@@ -39,7 +46,6 @@ function animate() {
   character.animation();
   character.updateState();
   character.movement(clock.getDelta());
-
   renderer.render(scene, camera);
 }
 

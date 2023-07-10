@@ -48,7 +48,7 @@ export class CharacterAnimation {
         group.add(model, characterCube);
         group.scale.set(desiredScale, desiredScale, desiredScale);
         group.rotateY(Math.PI);
-        group.position.set(-2, 0, 5);
+        group.position.set(-5, 0, -4);
         scene.add(group);
       },
       function (xhr) {
