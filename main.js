@@ -1,8 +1,6 @@
-import * as THREE from "three";
+import * as THREE from "https://unpkg.com/three@0.154.0/build/three.module.js";
 import { generateScene } from "./src/components/map";
 import { Character } from "./src/components/character";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-
 
 let character;
 let clock; 
