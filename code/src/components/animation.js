@@ -62,7 +62,7 @@ export class CharacterAnimation {
 
   loadFlashLight() {
     loader.load(
-      "./assets/flashLight.glb",
+      "./assets/flashlight.glb",
 
       function (gltf) {
         console.log("Loading flashlight");
