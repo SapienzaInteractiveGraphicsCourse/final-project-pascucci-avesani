@@ -18,16 +18,23 @@
     </style>
   </head>
   <body>
-    <div id="startMenu" style="display: block">
+    <div class="Menu" id="startMenu" style="display: block;">
       <button id="Easy">Easy</button>
       <button id="Normal">Normal</button>
       <button id="Hard">Hard</button>
+      <button id="v1">v1</button>
+      <button id="v2">v2</button>
+      <button id="v3">v3</button>
+      <button id="Start">Start</button>
     </div>
-    <div id="pauseMenu" style="display: none">
+    <div class="Menu" id="pauseMenu" style="display: none;">
       <button id="Resume">Resume</button>
       <button id="Restart">Restart</button>
     </div>
-    <canvas id="canvas" style="display: none"></canvas>
+    <div class="Menu" id="winMenu" style="display: none;">
+      <button id="newGame">Start a new game</button>
+    </div>
+    <canvas id="canvas" style="display: none;"></canvas>
     <script type="module" src="./main.js"></script>
   </body>
 </html>

@@ -1,10 +1,17 @@
 import * as THREE from "three";
+import { chosen } from "../../main.js";
 import { GLTFLoader } from "GLTFLoader";
-
 let model, flashLight;
 
 // Define character
 const loader = new GLTFLoader();
+
+let models = [
+  null,
+  "./assets/Male_01_V01.glb",
+  "./assets/Male_02_V01.glb",
+  "./assets/Female_03_V02.glb"
+];
 
 // Used to group together character and box
 //const group = new THREE.Group();
@@ -41,7 +48,7 @@ export class CharacterAnimation {
   loadModel(scene, characterCube) {
     const group = this.group;
     loader.load(
-      "./assets/Male_01_V01.glb",
+     models[chosen],
       function (gltf) {
         model = gltf.scene;
         // Set the desired scale for the model
@@ -62,7 +69,7 @@ export class CharacterAnimation {
 
   loadFlashLight() {
     loader.load(
-      "./assets/flashlight.glb",
+      "./assets/flashLight.glb",
 
       function (gltf) {
         console.log("Loading flashlight");

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 var coordinatesArray;
-let mazeLength;
+var mazeLength;
 
 const difficulty = 1;
 
@@ -139,7 +139,9 @@ if (!difficulty) {
 const wallsGeometry = {};
 const wallMaterials = {};
 const wallMeshes = {};
+let invisibleWallStartMesh;
 const wallBoxes = {};
+let startWallBox = new THREE.Box3();
 
 // Configure textures
 const loader = new THREE.TextureLoader();
@@ -219,24 +221,21 @@ function maze(scene) {
   const height = 7;
   const width = 1;
 
-  const invisibleWallGeometry = new THREE.BoxGeometry(10, height, 0.1);
+  const invisibleWallGeometry = new THREE.BoxGeometry(10, height, 1, 64, 64);
   const invisibleWallMaterial = new THREE.MeshBasicMaterial({
-    wireframe: true,
+    visible: false
   });
 
-  const invisibleWallStartMesh = new THREE.Mesh(
-    invisibleWallGeometry,
-    invisibleWallMaterial
-  );
+  invisibleWallStartMesh = new THREE.Mesh(invisibleWallGeometry, invisibleWallMaterial);
   invisibleWallStartMesh.position.set(-5, 3.5, 0);
   wallMeshes[coordinatesArray.length] = invisibleWallStartMesh;
-
-  const invisibleWallEndMesh = new THREE.Mesh(
-    invisibleWallGeometry,
-    invisibleWallMaterial
-  );
-  invisibleWallEndMesh.position.set(-mazeLength + 5, 3.5, -mazeLength);
+  invisibleWallStartMesh.geometry.computeBoundingBox();
+  
+  const invisibleWallEndMesh = new THREE.Mesh(invisibleWallGeometry, invisibleWallMaterial);
+  invisibleWallEndMesh.position.set(-mazeLength+5, 3.5, -mazeLength);
   wallMeshes[coordinatesArray.length + 1] = invisibleWallEndMesh;
+
+  coordinatesArray.push(0,0,10,0);
 
   for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
     // Initialize wall boxes
@@ -247,13 +246,13 @@ function maze(scene) {
       Math.abs(coordinatesArray[i + 1] - coordinatesArray[i + 3])
     );
 
-    wallsGeometry[j] = new THREE.BoxGeometry(length, height, width, 64, 64);
+    wallsGeometry[j] = new THREE.BoxGeometry(length, height, width, 1, 1);
 
     let activeTexture;
     if (length <= 20) {
       activeTexture = wallTtexture;
     } else {
-      wallTtexture2.forEach((texture) => {
+      wallTtexture2.forEach(texture => {
         texture.wrapS = THREE.RepeatWrapping;
         texture.wrapT = THREE.RepeatWrapping;
         texture.repeat.set(length / 20, 1);
@@ -261,42 +260,45 @@ function maze(scene) {
       activeTexture = wallTtexture2;
     }
 
-    wallTtexture3.forEach((texture) => {
+    wallTtexture3.forEach(texture => {
       texture.wrapS = THREE.RepeatWrapping;
       texture.wrapT = THREE.RepeatWrapping;
       texture.repeat.set(0.2, 1);
     });
 
     wallMaterials[j] = [
+      new THREE.MeshStandardMaterial({ 
+        map: wallTtexture3[0],
+        normalMap: wallTtexture3[1],
+        aoMap: wallTtexture3[2],
+        aoMapIntensity: 1.5
+       }),
       new THREE.MeshStandardMaterial({
         map: wallTtexture3[0],
         normalMap: wallTtexture3[1],
         aoMap: wallTtexture3[2],
-        aoMapIntensity: 1.5,
-      }),
-      new THREE.MeshStandardMaterial({
-        map: wallTtexture3[0],
-        normalMap: wallTtexture3[1],
-        aoMap: wallTtexture3[2],
-        aoMapIntensity: 1.5,
+        aoMapIntensity: 1.5
       }), //left side
       new THREE.MeshBasicMaterial({ color: "#ffffff" }), //top side
       new THREE.MeshBasicMaterial({ color: "#ffffff" }), //bottom side
-      new THREE.MeshStandardMaterial({
+      new THREE.MeshStandardMaterial({ 
         map: activeTexture[0],
         normalMap: activeTexture[1],
         aoMap: activeTexture[2],
-        aoMapIntensity: 1.5,
+        aoMapIntensity: 1.5
       }), //front side
-      new THREE.MeshStandardMaterial({
+      new THREE.MeshStandardMaterial({ 
         map: activeTexture[0],
         normalMap: activeTexture[1],
         aoMap: activeTexture[2],
-        aoMapIntensity: 1.5,
+        aoMapIntensity: 1.5
       }), //back side
     ];
 
     wallMeshes[j] = new THREE.Mesh(wallsGeometry[j], wallMaterials[j]);
+    if(i == coordinatesArray.length-4){
+      wallMeshes[j] = invisibleWallStartMesh;
+    }
 
     if (coordinatesArray[i] == coordinatesArray[i + 2]) {
       wallMeshes[j].rotation.y = Math.PI / 2;
@@ -313,46 +315,37 @@ function maze(scene) {
     // Create wall box
     wallMeshes[j].geometry.computeBoundingBox();
     scene.add(wallMeshes[j]);
+
   }
-  scene.add(wallMeshes[coordinatesArray.length]);
-  scene.add(wallMeshes[coordinatesArray.length + 1]);
-  wallBoxes[coordinatesArray.length] = wallBoxes[coordinatesArray.length + 1] =
-    new THREE.Box3();
 }
 
 // Draw the floor
 function floor(scene) {
-  const floorGeometry = new THREE.PlaneGeometry(mazeLength + 2, mazeLength + 2);
+  const floorGeometry = new THREE.PlaneGeometry(mazeLength+2, mazeLength+2);
   const floorMaterial = new THREE.MeshStandardMaterial({
     map: floorBaseColor,
     side: THREE.DoubleSide,
     normalMap: floorNormal,
     aoMap: floorAmbientOcclusion,
-    aoMapIntensity: 5,
+    aoMapIntensity: 5
   });
   const floorMesh = new THREE.Mesh(floorGeometry, floorMaterial);
   floorMesh.rotation.x = Math.PI / 2; // Rotate the floor to be horizontal
-  floorMesh.position.x = -mazeLength / 2;
-  floorMesh.position.z = -mazeLength / 2;
+  floorMesh.position.x = -mazeLength/2;
+  floorMesh.position.z = -mazeLength/2;
   scene.add(floorMesh);
 
-  const ceilingGeometry = new THREE.BoxGeometry(
-    mazeLength + 2,
-    3,
-    mazeLength + 2,
-    1024,
-    1024
-  );
+  const ceilingGeometry = new THREE.BoxGeometry(mazeLength+2, 3, mazeLength+2, 1024, 1024);
   const ceilingMaterial = new THREE.MeshStandardMaterial({
     map: ceilingBaseColor,
     normalMap: ceilingNormal,
     displacementMap: ceilingHeight,
     displacementScale: 0.4,
     aoMap: ceilingAmbientOcclusion,
-    aoMapIntensity: 1.5,
+    aoMapIntensity: 1.5
   });
   const ceilingMesh = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
-  ceilingMesh.position.set(-mazeLength / 2, 8.5, -mazeLength / 2);
+  ceilingMesh.position.set(-mazeLength/2, 8.5, -mazeLength/2);
 
   scene.add(ceilingMesh);
 }
@@ -379,5 +372,11 @@ export function isObjectColliding(box) {
       ]);
     }
   }
+  startWallBox.copy(invisibleWallStartMesh.geometry.boundingBox).applyMatrix4(invisibleWallStartMesh.matrixWorld);
+  if (box.intersectsBox(startWallBox)) {
+    console.log("intersect!");
+  }
   return collidingObjects;
 }
+
+export var mazeLength;

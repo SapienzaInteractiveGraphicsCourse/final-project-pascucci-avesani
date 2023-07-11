@@ -2,6 +2,7 @@ import * as THREE from "three";
 import * as eventListener from "../controls/eventListeners.js";
 import { isObjectColliding } from "./map.js";
 import { CharacterAnimation } from "./animation.js";
+import { mazeLength } from "./map.js";
 
 // Create character hit box
 const geometry = new THREE.BoxGeometry(1.6, 1.9, 1.2);
@@ -83,6 +84,11 @@ export class Character extends CharacterAnimation {
 
     this.camera.position.copy(idealOffSet);
     this.camera.lookAt(idealLookAt);
+
+    if (this.group.position.z < -mazeLength - 3) {
+      document.getElementById("winMenu").style.display = 'block';
+      document.getElementById("canvas").style.display = 'none';
+    }
   }
 
   handleCollision(controlObject, oldPosition) {
