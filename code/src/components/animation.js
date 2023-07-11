@@ -41,7 +41,7 @@ export class CharacterAnimation {
   loadModel(scene, characterCube) {
     const group = this.group;
     loader.load(
-      "../../assets/Male_01_V01.glb",
+      "./assets/Male_01_V01.glb",
       function (gltf) {
         model = gltf.scene;
         // Set the desired scale for the model

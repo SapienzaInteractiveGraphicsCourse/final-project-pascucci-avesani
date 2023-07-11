@@ -145,38 +145,40 @@ const wallBoxes = {};
 const loader = new THREE.TextureLoader();
 
 const wallTtexture = [
-  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg"),
-  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_normal.jpg"),
+  loader.load("./assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg"),
+  loader.load("./assets/wallText/Stylized_Sci-fi_Wall_001_normal.jpg"),
   loader.load(
-    "../../assets/wallText/Stylized_Sci-fi_Wall_001_ambientOcclusion.jpg"
+    "./assets/wallText/Stylized_Sci-fi_Wall_001_ambientOcclusion.jpg"
   ),
 ];
 
 const wallTtexture2 = [
-  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg"),
-  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_normal.jpg"),
+  loader.load("./assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg"),
+  loader.load("./assets/wallText/Stylized_Sci-fi_Wall_001_normal.jpg"),
   loader.load(
-    "../../assets/wallText/Stylized_Sci-fi_Wall_001_ambientOcclusion.jpg"
+    "./assets/wallText/Stylized_Sci-fi_Wall_001_ambientOcclusion.jpg"
   ),
 ];
 
 const wallTtexture3 = [
-  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg"),
-  loader.load("../../assets/wallText/Stylized_Sci-fi_Wall_001_normal.jpg"),
+  loader.load("./assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg"),
+  loader.load("./assets/wallText/Stylized_Sci-fi_Wall_001_normal.jpg"),
   loader.load(
-    "../../assets/wallText/Stylized_Sci-fi_Wall_001_ambientOcclusion.jpg"
+    "./assets/wallText/Stylized_Sci-fi_Wall_001_ambientOcclusion.jpg"
   ),
 ];
 
 let floorBaseColor, floorAmbientOcclusion, floorHeight, floorNormal;
 
 let floorTextures = [
-  (floorBaseColor = loader.load("assets/floorText/Concrete_017_baseColor.jpg")),
-  (floorAmbientOcclusion = loader.load(
-    "assets/floorText/Concrete_017_ambientOcclusion.jpg"
+  (floorBaseColor = loader.load(
+    "./assets/floorText/Concrete_017_baseColor.jpg"
   )),
-  (floorNormal = loader.load("assets/floorText/Concrete_017_normal.jpg")),
-  (floorHeight = loader.load("assets/floorText/Concrete_017_height.png")),
+  (floorAmbientOcclusion = loader.load(
+    "./assets/floorText/Concrete_017_ambientOcclusion.jpg"
+  )),
+  (floorNormal = loader.load("./assets/floorText/Concrete_017_normal.jpg")),
+  (floorHeight = loader.load("./assets/floorText/Concrete_017_height.png")),
 ];
 
 floorTextures.forEach((texture) => {
@@ -189,16 +191,16 @@ let ceilingBaseColor, ceilingAmbientOcclusion, ceilingHeight, ceilingNormal;
 
 const ceilingTextures = [
   (ceilingBaseColor = loader.load(
-    "../../assets/ceilingText/Concrete_Ceiling_002_basecolor.jpg"
+    "./assets/ceilingText/Concrete_Ceiling_002_basecolor.jpg"
   )),
   (ceilingNormal = loader.load(
-    "../../assets/ceilingText/Concrete_Ceiling_002_normal.jpg"
+    "./assets/ceilingText/Concrete_Ceiling_002_normal.jpg"
   )),
   (ceilingHeight = loader.load(
-    "../../assets/ceilingText/Concrete_Ceiling_002_height.png"
+    "./assets/ceilingText/Concrete_Ceiling_002_height.png"
   )),
   (ceilingAmbientOcclusion = loader.load(
-    "../../assets/ceilingText/Concrete_Ceiling_002_ambientOcclusion.jpg"
+    "./assets/ceilingText/Concrete_Ceiling_002_ambientOcclusion.jpg"
   )),
 ];
 
@@ -209,7 +211,7 @@ ceilingTextures.forEach((texture) => {
 });
 
 const background = loader.load(
-  "assets/High_resolution_wallpaper_background_ID_77701837927.png"
+  "./assets/High_resolution_wallpaper_background_ID_77701837927.png"
 );
 
 // Draw the maze
