@@ -88,6 +88,7 @@ export class Character extends CharacterAnimation {
     if (this.group.position.z < -mazeLength - 3) {
       document.getElementById("winMenu").style.display = 'block';
       document.getElementById("canvas").style.display = 'none';
+      this.group.position.z = 0;
     }
   }
 

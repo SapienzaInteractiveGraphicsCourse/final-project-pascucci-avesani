@@ -72,7 +72,7 @@ function init() {
   }
 }
 
-function initGame() {
+export function initGame() {
     // Camera and scene setup
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(
@@ -91,7 +91,7 @@ function initGame() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     // Create map
-    generateScene(scene);
+    generateScene(scene, mode);
 
     // Create Clock
     clock = new THREE.Clock();
@@ -111,7 +111,7 @@ function initGame() {
 }
 
 //Render loop
-function animate() {
+export function animate() {
   requestAnimationFrame(animate);
 
   character.animation();
