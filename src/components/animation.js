@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import * as THREE from "https://unpkg.com/three@0.154.0/build/three.module.js";
+import { GLTFLoader } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/loaders/GLTFLoader.js";
 
 let model, flashLight;
 
@@ -62,7 +62,7 @@ export class CharacterAnimation {
 
   loadFlashLight() {
     loader.load(
-      "../../assets/flashLight.glb",
+      "./assets/flashLight.glb",
 
       function (gltf) {
         console.log("Loading flashlight");
