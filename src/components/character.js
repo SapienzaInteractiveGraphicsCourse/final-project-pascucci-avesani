@@ -1,7 +1,7 @@
-import * as THREE from "https://unpkg.com/three@0.154.0/build/three.module.js";
-import * as eventListener from "../controls/eventListeners";
-import { isObjectColliding } from "./map";
-import { CharacterAnimation } from "./animation";
+import * as THREE from "three";
+import * as eventListener from "../controls/eventListeners.js";
+import { isObjectColliding } from "./map.js";
+import { CharacterAnimation } from "./animation.js";
 
 // Create character hit box
 const geometry = new THREE.BoxGeometry(1.6, 1.9, 1.2);
@@ -16,7 +16,6 @@ const characterBox = new THREE.Box3();
 
 export class Character extends CharacterAnimation {
   constructor(scene, camera) {
-
     super(scene, characterCube);
     this.camera = camera;
     this.moveSpeed = 0.05;
@@ -29,7 +28,6 @@ export class Character extends CharacterAnimation {
     this.deceleration = new THREE.Vector3(-0.0005, -0.0001, -5.0);
     this.acceleration = new THREE.Vector3(1, 0.25, 50.0);
     this.velocity = new THREE.Vector3(0, 0, 0);
-    
   }
 
   movement(timeInSeconds) {
