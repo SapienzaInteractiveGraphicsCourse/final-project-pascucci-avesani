@@ -3,50 +3,102 @@ import { generateScene } from "./src/components/map";
 import { Character } from "./src/components/character";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
-// Camera and scene setup
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.position.x = -2;
-camera.position.z = -10;
-camera.position.y = 2;
 
-// Set game window size
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
+let character;
+let clock; 
+let renderer;
+let scene, camera;
+let mode = 0;
 
-document.body.appendChild(renderer.domElement);
+function init() {
 
-// Create map
-generateScene(scene);
+  document.getElementById("Easy").onclick = function () {
+      mode = 1;
+      document.getElementById("startMenu").style.display = 'none';
+      canvas.style.display = 'block';
+      initGame();
+      animate();
+  }
+  document.getElementById("Normal").onclick = function () {
+      mode = 2;
+      document.getElementById("startMenu").style.display = 'none';
+      canvas.style.display = 'block';
+      initGame();
+      animate();
+  }
+  document.getElementById("Hard").onclick = function () {
+      mode = 3;
+      document.getElementById("startMenu").style.display = 'none';
+      canvas.style.display = 'block';
+      initGame();
+      animate();
+  }
+  document.getElementById("Resume").onclick = function () {
+    canvas.style.display = 'block';
+    document.getElementById("pauseMenu").style.display = 'none';
+  }
+  document.getElementById("Restart").onclick = function () {
+    canvas.style.display = 'none';
+    document.getElementById("pauseMenu").style.display = 'none';
+    document.getElementById("startMenu").style.display = 'block';
+  }
+  document.addEventListener('keydown', handleKeyDown);
 
-// Create Clock
-const clock = new THREE.Clock();
+  function handleKeyDown(event) {
+    if (event.keyCode === 27) { // 27 is the key code for the Escape key
+      canvas.style.display = 'none';
+      document.getElementById("pauseMenu").style.display = 'block';
+    }
+  }
+}
 
-// Create character
-var character = new Character(scene, camera);
+function initGame() {
+    // Camera and scene setup
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.x = -2;
+    camera.position.z = -10;
+    camera.position.y = 2;
 
-// Create a directional light
-let dirlight = new THREE.DirectionalLight(0xffffff, 0.7);
-dirlight.position.set(100, 100, 100);
-scene.add(dirlight);
+    // Set game window size
+    let canvas = document.getElementById("canvas");
+    renderer = new THREE.WebGLRenderer({canvas: canvas});
+    renderer.setSize(window.innerWidth, window.innerHeight);
 
-let ambient = new THREE.AmbientLight(0xffffff, 0.3);
-scene.add(ambient);
+    // Create map
+    generateScene(scene);
 
-//
+    // Create Clock
+    clock = new THREE.Clock();
+
+    // Create character
+    character = new Character(scene, camera);
+
+    // Create a directional light
+    let dirlight = new THREE.DirectionalLight(0xffffff, 0.7);
+    dirlight.position.set(100, 100, 100);
+    scene.add(dirlight);
+
+    let ambient = new THREE.AmbientLight(0xffffff, 0.3);
+    scene.add(ambient);
+
+    scene.fog = new THREE.Fog(0x222222, 0, 10);
+}
 
 //Render loop
 function animate() {
   requestAnimationFrame(animate);
+
   character.animation();
   character.updateState();
   character.movement(clock.getDelta());
+
   renderer.render(scene, camera);
 }
 
-animate();
+init();

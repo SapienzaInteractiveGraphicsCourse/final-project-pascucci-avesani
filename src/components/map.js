@@ -1,11 +1,9 @@
 import * as THREE from "three";
-import { getDifficulty } from "./difficulty.js"
 
 var coordinatesArray;
 let mazeLength;
 
 const difficulty = 1;
-console.log(difficulty);
 
 if(!difficulty){
   //to handle
