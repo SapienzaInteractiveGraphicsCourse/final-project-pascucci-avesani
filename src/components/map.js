@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from "https://unpkg.com/three@0.154.0/build/three.module.js";
 
 var coordinatesArray;
 let mazeLength;
