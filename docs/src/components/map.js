@@ -172,7 +172,7 @@ let floorBaseColor, floorAmbientOcclusion, floorHeight, floorNormal;
 
 let floorTextures = [
   (floorBaseColor = loader.load(
-    "./assets/floorText/Concrete_017_baseColor.jpg"
+    "./assets/floorText/Concrete_017_basecolor.jpg"
   )),
   (floorAmbientOcclusion = loader.load(
     "./assets/floorText/Concrete_017_ambientOcclusion.jpg"

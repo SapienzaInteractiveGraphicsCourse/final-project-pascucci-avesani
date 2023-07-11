@@ -82,7 +82,7 @@ function initGame() {
   let ambient = new THREE.AmbientLight(0xffffff, 0.3);
   scene.add(ambient);
 
-  scene.fog = new THREE.Fog(0x222222, 0, 10);
+  //scene.fog = new THREE.Fog(0x222222, 0, 10);
 
   // Create character
   character = new Character(scene, camera);
