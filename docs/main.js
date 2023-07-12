@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { generateScene } from "./src/components/map.js";
 import { Character } from "./src/components/character.js";
+import { startTimer, initTimer, pauseTimer } from "./src/controls/eventListeners.js";
 
 
 let character;
@@ -11,9 +12,10 @@ var mode, chosen;
 
 function init() {
 
-  mode = chosen = 1;
+  mode = chosen = 0;
   document.getElementById("character").innerText = "Character:";
   document.getElementById("difficulty").innerText = "Game mode:";
+  initTimer();
 
   document.getElementById("Easy").onclick = function () {
       mode = 1;
@@ -44,19 +46,13 @@ function init() {
   document.getElementById("Resume").onclick = function () {
     canvas.style.display = 'block';
     document.getElementById("pauseMenu").style.display = 'none';
+    startTimer();
   }
   document.getElementById("Restart").onclick = function () {
-    canvas.style.display = 'none';
-    document.getElementById("pauseMenu").style.display = 'none';
-    document.getElementById("startMenu").style.display = 'block';
-    init();
+    location.reload();
   }
   document.getElementById("newGame").onclick = function () {
-    canvas.style.display = 'none';
-    document.getElementById("pauseMenu").style.display = 'none';
-    document.getElementById("winMenu").style.display = 'none';
-    document.getElementById("startMenu").style.display = 'block';
-    init();
+    location.reload();
   }
   document.addEventListener('keydown', handleKeyDown);
 
@@ -64,6 +60,7 @@ function init() {
     if (event.keyCode === 27 && mode && chosen) { // 27 is the key code for the Escape key
       canvas.style.display = 'none';
       document.getElementById("pauseMenu").style.display = 'block';
+      pauseTimer();
     }
   }
   document.getElementById("v1").onclick = function () {
@@ -114,6 +111,8 @@ export function initGame() {
 
     let ambient = new THREE.AmbientLight(0xffffff, 0.3);
     scene.add(ambient);
+
+    startTimer();
 
     //scene.fog = new THREE.Fog(0x222222, 0, 10);
 }

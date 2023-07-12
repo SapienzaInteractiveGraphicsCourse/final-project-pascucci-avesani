@@ -17,13 +17,22 @@
   </head>
   <body>
     <div class="container text-center" id="startMenu" style="display: block;">
-      <div class="row mt-5 mb-5 p-4">
+      <div class="row mt-5 mb-2 p-4">
         <div class="col-4"></div>
         <div class="col-4 text-center">
           <h1 class="top-text">START MENU</h1>
         </div>
       </div>
-      <div class="row mt-5 pt-3">
+      <div class="row">
+        <div class="col mt-3">
+          <h2 class="btn-start" style="background-color: transparent;">Please select the game difficulty:</h2>
+        </div>
+        <div class="col">
+          <h2 class="btn-start" style="background-color: transparent;">Please select your character</h2>
+          <h4 class="btn-start" style="text-decoration: none; background: none;"> You can use orbit controls to view the model!</h4>
+        </div>
+      </div>
+      <div class="row mt-3 pt-3">
         <div class="col">
             <div class="card" style="width: 12rem;">
               <img src="./assets/easy.png" class="card-img-top" alt="...">
@@ -66,13 +75,13 @@
       </div>
       <div class="row mt-4 pt-4">
         <div class="col m-2 text-center text-light">
-          <p class="lead" id="difficulty" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);"></p>
+          <p class="lead btn-start" id="difficulty"></p>
         </div>
         <div class="col m-2 text-center">
           <button id="Start" class="btn btn-start" style="font-size: 32px;">START GAME</button>
         </div>
         <div class="col m-2 text-center text-light">
-          <p class="lead" id="character" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);"></p>
+          <p class="lead btn-start" id="character"></p>
         </div>
       </div>
     </div>
@@ -107,10 +116,11 @@
           <div class="col-4">
             <div class="row mt-5">
               <div class="col">
-                <h1 class="top-text">CONGRATULATIONS !</h1>
+                <h1 class="top-text p-2">CONGRATULATIONS</h1>
               </div>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-5 mb-3">
+              <div class="text-center"><h3 id="winTime"></h3></div>
               <div class="col mt-5">
                 <button class="btn-select pause-btn m-5" id="newGame">Start a new game</button>
               </div>

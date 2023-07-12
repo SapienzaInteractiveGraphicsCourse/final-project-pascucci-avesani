@@ -328,9 +328,6 @@ export function isObjectColliding(box) {
     }
   }
   startWallBox.copy(invisibleWallStartMesh.geometry.boundingBox).applyMatrix4(invisibleWallStartMesh.matrixWorld);
-  if (box.intersectsBox(startWallBox)) {
-    console.log("intersect!");
-  }
   return collidingObjects;
 }
 
