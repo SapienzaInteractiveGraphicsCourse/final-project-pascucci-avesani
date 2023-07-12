@@ -5,15 +5,13 @@ import { OrbitControls } from "OrbitControls";
 const loader = new GLTFLoader();
 
 let models = [
-  "./assets/Male_01_V01.glb",
-  "./assets/Male_02_V01.glb",
-  "./assets/Female_03_V02.glb"
+  "./assets/characters/Male_01_V01.glb",
+  "./assets/characters/Male_02_V01.glb",
+  "./assets/characters/Female_03_V02.glb",
 ];
 
 const textureLoader = new THREE.TextureLoader();
-const background = textureLoader.load(
-  "./assets/High_resolution_wallpaper_background_ID_77701837927.png"
-);
+const background = textureLoader.load("./assets/sky_background.png");
 
 let loadedModels = [];
 
@@ -49,25 +47,27 @@ camera3.position.z = 1;
 
 // Set game window size
 let canvas1 = document.getElementById("model1");
-const renderer1 = new THREE.WebGLRenderer({canvas: canvas1});
+const renderer1 = new THREE.WebGLRenderer({ canvas: canvas1 });
 renderer1.setSize(canvas1.clientWidth, canvas1.clientHeight);
 
 let canvas2 = document.getElementById("model2");
-const renderer2 = new THREE.WebGLRenderer({canvas: canvas2});
+const renderer2 = new THREE.WebGLRenderer({ canvas: canvas2 });
 renderer2.setSize(canvas1.clientWidth, canvas1.clientHeight);
 
 let canvas3 = document.getElementById("model3");
-const renderer3 = new THREE.WebGLRenderer({canvas: canvas3});
+const renderer3 = new THREE.WebGLRenderer({ canvas: canvas3 });
 renderer3.setSize(canvas1.clientWidth, canvas1.clientHeight);
 
-for (let i = 0; i < 3; i++){
-  loadedModels.push(loader.load(models[i], function(glb) {
+for (let i = 0; i < 3; i++) {
+  loadedModels.push(
+    loader.load(models[i], function (glb) {
       const model = glb.scene;
       model.position.y = -1.5;
       model.scale.set(2, 1, 2);
       scenes[i].add(model, new THREE.AmbientLight(0xffffff, 0.5));
       scenes[i].background = background;
-  }));
+    })
+  );
 }
 
 const controls1 = new OrbitControls(camera1, renderer1.domElement);
@@ -87,5 +87,3 @@ function animate() {
 }
 
 animate();
-
-

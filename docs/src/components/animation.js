@@ -8,9 +8,9 @@ const loader = new GLTFLoader();
 
 let models = [
   null,
-  "./assets/Male_01_V01.glb",
-  "./assets/Male_02_V01.glb",
-  "./assets/Female_03_V02.glb"
+  "./assets/characters/Male_01_V01.glb",
+  "./assets/characters/Male_02_V01.glb",
+  "./assets/characters/Female_03_V02.glb",
 ];
 
 // Used to group together character and box
@@ -48,7 +48,7 @@ export class CharacterAnimation {
   loadModel(scene, characterCube) {
     const group = this.group;
     loader.load(
-     models[chosen],
+      models[chosen],
       function (gltf) {
         model = gltf.scene;
         // Set the desired scale for the model
@@ -69,7 +69,7 @@ export class CharacterAnimation {
 
   loadFlashLight() {
     loader.load(
-      "./assets/flashLight.glb",
+      "./assets/characters/flashlight.glb",
 
       function (gltf) {
         console.log("Loading flashlight");
