@@ -1,9 +1,11 @@
 import * as THREE from "three";
+import { GLTFLoader } from "GLTFLoader";
 
 var coordinatesArray;
 var mazeLength;
 
 let loader;
+let modelLoader = new GLTFLoader();
 
 let wallsGeometry = {};
 let wallMaterials = {};
@@ -20,6 +22,8 @@ let ceilingTextures;
 let ceilingBaseColor, ceilingAmbientOcclusion, ceilingHeight, ceilingNormal;
 
 let background;
+let ceilingLight;
+let lightsPositions = [];
 
 function initScene(mode) {
   if (!mode) {
@@ -248,13 +252,13 @@ function maze(scene) {
     });
 
     wallMaterials[j] = [
-      new THREE.MeshStandardMaterial({
+      new THREE.MeshPhongMaterial({
         map: wallTtexture3[0],
         normalMap: wallTtexture3[1],
         aoMap: wallTtexture3[2],
         aoMapIntensity: 1.5,
       }),
-      new THREE.MeshStandardMaterial({
+      new THREE.MeshPhongMaterial({
         map: wallTtexture3[0],
         normalMap: wallTtexture3[1],
         aoMap: wallTtexture3[2],
@@ -262,13 +266,13 @@ function maze(scene) {
       }), //left side
       new THREE.MeshBasicMaterial({ color: "#ffffff" }), //top side
       new THREE.MeshBasicMaterial({ color: "#ffffff" }), //bottom side
-      new THREE.MeshStandardMaterial({
+      new THREE.MeshPhongMaterial({
         map: activeTexture[0],
         normalMap: activeTexture[1],
         aoMap: activeTexture[2],
         aoMapIntensity: 1.5,
       }), //front side
-      new THREE.MeshStandardMaterial({
+      new THREE.MeshPhongMaterial({
         map: activeTexture[0],
         normalMap: activeTexture[1],
         aoMap: activeTexture[2],
@@ -336,10 +340,76 @@ function floor(scene) {
   scene.add(ceilingMesh);
 }
 
+function loadLightModel() {
+  modelLoader.load(
+    "./assets/ceilingLight.glb",
+    function (glb) {
+      console.log("Loading ceiling lights");
+      ceilingLight = glb.scene;
+    },
+    null,
+    function (error) {
+      console.error(error);
+    }
+  );
+
+  //scene.add(lightsPositions);
+  // const light = new THREE.PointLight(0xffffff, 1.0, 30);
+  // light.position.set(-5.5, height, -10);
+  // scene.add(light);
+}
+
+function addLights(scene) {
+  const interval = setInterval(checkCondition, 1000);
+  loadLightModel(scene);
+  function checkCondition() {
+    if (ceilingLight) {
+      clearInterval(interval);
+      insertLights(scene);
+    }
+  }
+}
+
+function insertLights(scene) {
+  const height = 6.5;
+  const light = new THREE.PointLight(0xffffff, 0.5, 15);
+  const lights = {};
+
+  for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
+    if (coordinatesArray[i] == coordinatesArray[i + 2]) {
+      const zPosition =
+        -(coordinatesArray[i + 1] + coordinatesArray[i + 3]) / 2;
+      const xPosition = -coordinatesArray[i] - 5.5;
+      lightsPositions[i] = ceilingLight.clone(true);
+      lightsPositions[i].position.set(xPosition, height, zPosition);
+
+      scene.add(lightsPositions[i]);
+
+      lights[i] = light.clone();
+      lights[i].position.set(xPosition, height, zPosition);
+      scene.add(lights[i]);
+    } else if (coordinatesArray[i + 1] == coordinatesArray[i + 3]) {
+      const zPosition = -(coordinatesArray[i] + coordinatesArray[i + 2]) / 2;
+      const xPosition = -coordinatesArray[i + 1] - 5.5;
+      lightsPositions[i] = ceilingLight.clone(true);
+      lightsPositions[i].rotateY(Math.PI / 2);
+      lightsPositions[i].position.set(xPosition, height, zPosition);
+
+      scene.add(lightsPositions[i]);
+
+      lights[i] = light.clone();
+      lights[i].position.set(xPosition, height, zPosition);
+      scene.add(lights[i]);
+    }
+  }
+}
+
 export function generateScene(scene, mode) {
   initScene(mode);
   maze(scene);
   floor(scene);
+  addLights(scene);
+
   scene.background = background;
 }
 
