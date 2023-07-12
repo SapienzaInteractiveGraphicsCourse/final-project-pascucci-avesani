@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    background-image: url("assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg");
+    background-size: 100vh;
+  }
+  .btn-start {
+    background-color: transparent;
+    border-width: 0rem;
+    text-decoration: underline white;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+  .btn-start:hover {
+    color: white;
+    background-color: grey;
+  }
+
+  .btn-select {
+    background-color: orangered;
+    color: whitesmoke;
+    border-radius: 5px;
+    border: 0rem;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.7);
+  }
+  .btn-select:hover {
+    background-color: orange;
+  }
+  .top-text {
+    background-color: orangered;
+    width: auto;
+    border-radius: 5px;
+    box-shadow: 5px black;
+    font-family: Haettenschweiler, 'Arial Narrow Bold', sans-serif  ;
+    border-bottom: 5px solid white;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.7);
+    text-shadow: 1px 1px 2px rgba(174, 174, 174, 0.7);
+  }
+  .pause-btn {
+    font-size: 32px;
+    padding: 5px 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.7);
+  }

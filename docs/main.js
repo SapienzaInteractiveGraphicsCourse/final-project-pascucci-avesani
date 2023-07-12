@@ -11,16 +11,21 @@ var mode, chosen;
 
 function init() {
 
-  mode = chosen = 0;
+  mode = chosen = 1;
+  document.getElementById("character").innerText = "Character:";
+  document.getElementById("difficulty").innerText = "Game mode:";
 
   document.getElementById("Easy").onclick = function () {
       mode = 1;
+      document.getElementById("difficulty").innerText = "Game mode: \n EASY";
   }
   document.getElementById("Normal").onclick = function () {
       mode = 2;
+      document.getElementById("difficulty").innerText = "Game mode: \n NORMAL";
   }
   document.getElementById("Hard").onclick = function () {
       mode = 3;
+      document.getElementById("difficulty").innerText = "Game mode: \n HARD";
   }
   document.getElementById("Start").onclick = function () {
     if (mode && chosen) {
@@ -63,12 +68,15 @@ function init() {
   }
   document.getElementById("v1").onclick = function () {
     chosen = 1;
+    document.getElementById("character").innerText = "Character: \n DAVID";
   }
   document.getElementById("v2").onclick = function () {
     chosen = 2;
+    document.getElementById("character").innerText = "Character: \n SIMON";
   }
   document.getElementById("v3").onclick = function () {
     chosen = 3;
+    document.getElementById("character").innerText = "Character: \n ASIA";
   }
 }
 

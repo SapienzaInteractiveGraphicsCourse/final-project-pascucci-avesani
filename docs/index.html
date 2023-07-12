@@ -5,36 +5,123 @@
       {
         "imports": {
           "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
-          "GLTFLoader": "https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js"
+          "GLTFLoader": "https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js",
+          "OrbitControls": "https://unpkg.com/three@0.154.0/examples/jsm/controls/OrbitControls.js"
         }
       }
     </script>
     <meta charset="utf-8" />
     <title>Maze Runner</title>
-    <style>
-      body {
-        margin: 0;
-      }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="./index.css">
   </head>
   <body>
-    <div class="Menu" id="startMenu" style="display: block;">
-      <button id="Easy">Easy</button>
-      <button id="Normal">Normal</button>
-      <button id="Hard">Hard</button>
-      <button id="v1">v1</button>
-      <button id="v2">v2</button>
-      <button id="v3">v3</button>
-      <button id="Start">Start</button>
+    <div class="container text-center" id="startMenu" style="display: block;">
+      <div class="row mt-5 mb-5 p-4">
+        <div class="col-4"></div>
+        <div class="col-4 text-center">
+          <h1 class="top-text">START MENU</h1>
+        </div>
+      </div>
+      <div class="row mt-5 pt-3">
+        <div class="col">
+            <div class="card" style="width: 12rem;">
+              <img src="./assets/easy.png" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">EASY</h5>
+                <button class="btn-select" id="Easy">Select</button>
+              </div>
+            </div>
+        </div>
+        <div class="col">
+          <div class="card" style="width: 12rem;">
+            <img src="./assets/normal.png" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">NORMAL</h5>
+              <button class="btn-select" id="Normal">Select</button>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card" style="width: 12rem;">
+            <img src="./assets/hard.png" class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">HARD</h5>
+              <button class="btn-select" id="Hard">Select</button>
+            </div>
+          </div>
+        </div>
+          <div class="col">
+              <canvas id="model1" style="height: 17rem; width: 12rem;"></canvas>
+              <button class="btn-select" id="v1">David</h5>
+          </div>
+          <div class="col">
+              <canvas id="model2" style="height: 17rem; width: 12rem;"></canvas>
+              <button class="btn-select" id="v2">Simon</h5>
+          </div>
+          <div class="col">
+            <canvas id="model3" style="height: 17rem; width: 12rem;"></canvas>
+            <button class="btn-select" id="v3">Asia</h5>
+        </div>
+      </div>
+      <div class="row mt-4 pt-4">
+        <div class="col m-2 text-center text-light">
+          <p class="lead" id="difficulty" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);"></p>
+        </div>
+        <div class="col m-2 text-center">
+          <button id="Start" class="btn btn-start" style="font-size: 32px;">START GAME</button>
+        </div>
+        <div class="col m-2 text-center text-light">
+          <p class="lead" id="character" style="text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);"></p>
+        </div>
+      </div>
     </div>
     <div class="Menu" id="pauseMenu" style="display: none;">
-      <button id="Resume">Resume</button>
-      <button id="Restart">Restart</button>
-    </div>
+      <div class="container text-center mt-5">
+        <div class="row">
+          <div class="col-4"></div>
+          <div class="col-4">
+            <div class="row mt-5 mb-5 gy-5">
+              <div class="col mt-5">
+                <h1 class="top-text mb-4 mt-5">PAUSE MENU</h1>
+              </div>
+            </div>
+            <div class="row mb-5 gy-5">
+              <div class="col">
+                <input type="button" class="btn-select btn-xl pause-btn" id="Resume" value="Resume"></input >
+              </div>
+            </div>
+            <div class="row mt-5">
+              <div class="col">
+                <input type="button" class="btn-select btn-xl pause-btn" id="Restart" value="Restart"></input >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>    
     <div class="Menu" id="winMenu" style="display: none;">
-      <button id="newGame">Start a new game</button>
+      <div class="container text-center mt-5">
+        <div class="row">
+          <div class="col-4"></div>
+          <div class="col-4">
+            <div class="row mt-5">
+              <div class="col">
+                <h1 class="top-text">CONGRATULATIONS !</h1>
+              </div>
+            </div>
+            <div class="row mt-5">
+              <div class="col mt-5">
+                <button class="btn-select pause-btn m-5" id="newGame">Start a new game</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <canvas id="canvas" style="display: none;"></canvas>
     <script type="module" src="./main.js"></script>
+    <script type="module" src="./src/components/menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   </body>
 </html>
