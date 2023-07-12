@@ -231,7 +231,7 @@ function maze(scene) {
       Math.abs(coordinatesArray[i + 1] - coordinatesArray[i + 3])
     );
 
-    wallsGeometry[j] = new THREE.BoxGeometry(length, height, width, 1, 1);
+    wallsGeometry[j] = new THREE.BoxGeometry(length + 0.5, height, width, 1, 1);
 
     let activeTexture;
     if (length <= 20) {
@@ -352,11 +352,6 @@ function loadLightModel() {
       console.error(error);
     }
   );
-
-  //scene.add(lightsPositions);
-  // const light = new THREE.PointLight(0xffffff, 1.0, 30);
-  // light.position.set(-5.5, height, -10);
-  // scene.add(light);
 }
 
 function addLights(scene) {
@@ -372,35 +367,34 @@ function addLights(scene) {
 
 function insertLights(scene) {
   const height = 6.5;
-  const light = new THREE.PointLight(0xffffff, 0.5, 15);
+  const light = new THREE.PointLight(0xffffff, 0.5, 20);
   const lights = {};
+  const positions = [];
+  let xPosition, zPosition;
+  let rotate = false;
 
   for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
     if (coordinatesArray[i] == coordinatesArray[i + 2]) {
-      const zPosition =
-        -(coordinatesArray[i + 1] + coordinatesArray[i + 3]) / 2;
-      const xPosition = -coordinatesArray[i] - 5.5;
-      lightsPositions[i] = ceilingLight.clone(true);
-      lightsPositions[i].position.set(xPosition, height, zPosition);
-
-      scene.add(lightsPositions[i]);
-
-      lights[i] = light.clone();
-      lights[i].position.set(xPosition, height, zPosition);
-      scene.add(lights[i]);
+      zPosition = -(coordinatesArray[i + 1] + coordinatesArray[i + 3]) / 2;
+      xPosition = -coordinatesArray[i] - 5.5;
     } else if (coordinatesArray[i + 1] == coordinatesArray[i + 3]) {
-      const zPosition = -(coordinatesArray[i] + coordinatesArray[i + 2]) / 2;
-      const xPosition = -coordinatesArray[i + 1] - 5.5;
-      lightsPositions[i] = ceilingLight.clone(true);
-      lightsPositions[i].rotateY(Math.PI / 2);
-      lightsPositions[i].position.set(xPosition, height, zPosition);
+      zPosition = -(coordinatesArray[i] + coordinatesArray[i + 2]) / 2;
+      xPosition = -coordinatesArray[i + 1] - 5.5;
+      rotate = true;
+    }
+    if (!(positions.includes(xPosition) && positions.includes(zPosition))) {
+      positions.push(zPosition, xPosition);
 
+      lightsPositions[i] = ceilingLight.clone(true);
+      if (rotate) lightsPositions[i].rotateY(Math.PI / 2);
+      lightsPositions[i].position.set(xPosition, height, zPosition);
       scene.add(lightsPositions[i]);
 
       lights[i] = light.clone();
       lights[i].position.set(xPosition, height, zPosition);
       scene.add(lights[i]);
     }
+    rotate = false;
   }
 }
 

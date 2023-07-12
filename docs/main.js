@@ -15,8 +15,7 @@ var mode, chosen;
 
 function init() {
   mode = chosen = 0;
-  document.getElementById("character").innerText = "Character:";
-  document.getElementById("difficulty").innerText = "Game mode:";
+
   initTimer();
 
   document.getElementById("Easy").onclick = function () {
