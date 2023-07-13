@@ -102,70 +102,51 @@ export class Character extends CharacterAnimation {
   }
 
   handleCollision(controlObject, oldPosition) {
-    let { movingState } = this;
+    const { movingState } = this;
     const { x, z } = controlObject.position;
     const collidingObjects = isObjectColliding(characterBox);
 
-    if (collidingObjects == 0) {
-      if (z < oldPosition.z) movingState[1] = 1;
-      else movingState[1] = -1;
-      if (x < oldPosition.x) movingState[0] = 1;
-      else movingState[0] = -1;
+    if (collidingObjects.length === 0) {
+      movingState[1] = z < oldPosition.z ? 1 : -1;
+      movingState[0] = x < oldPosition.x ? 1 : -1;
     } else {
       for (let i = 0; i < collidingObjects.length; i++) {
-        if (collidingObjects[i][1] == collidingObjects[i][3]) {
-          if (z < oldPosition.z && movingState[1] == 1)
+        const [x1, z1, x2, z2] = collidingObjects[i];
+
+        if (z1 === z2) {
+          if (
+            (z < oldPosition.z && movingState[1] === 1) ||
+            (z > oldPosition.z && movingState[1] === -1)
+          ) {
             controlObject.position.z = oldPosition.z;
-          else if (z > oldPosition.z && movingState[1] == -1)
-            controlObject.position.z = oldPosition.z;
-        } else if (collidingObjects[i][0] == collidingObjects[i][2]) {
-          if (x < oldPosition.x && movingState[0] == 1)
-            controlObject.position.x = oldPosition.x;
-          else if (x > oldPosition.x && movingState[0] == -1) {
+          }
+        } else if (x1 === x2) {
+          if (
+            (x < oldPosition.x && movingState[0] === 1) ||
+            (x > oldPosition.x && movingState[0] === -1)
+          ) {
             controlObject.position.x = oldPosition.x;
           }
         }
 
-        if (collidingObjects[i][1] == collidingObjects[i][3]) {
+        const maxX = Math.max(Math.abs(x1), Math.abs(x2));
+        const minX = Math.min(Math.abs(x1), Math.abs(x2));
+        const maxZ = Math.max(Math.abs(z1), Math.abs(z2));
+        const minZ = Math.min(Math.abs(z1), Math.abs(z2));
+
+        if (!(Math.abs(x) < maxX && Math.abs(x) > minX)) {
           if (
-            !(
-              Math.abs(x) <
-                Math.max(
-                  (Math.abs(collidingObjects[i][0]),
-                  Math.abs(collidingObjects[i][2]))
-                ) &&
-              Math.abs(x) >
-                Math.min(
-                  Math.abs(collidingObjects[i][0]),
-                  Math.abs(collidingObjects[i][2])
-                )
-            )
+            (x < oldPosition.x && movingState[0] === 1) ||
+            (x > oldPosition.x && movingState[0] === -1)
           ) {
-            if (x < oldPosition.x && movingState[0] == 1)
-              controlObject.position.x = oldPosition.x;
-            else if (x > oldPosition.x && movingState[0] == -1) {
-              controlObject.position.x = oldPosition.x;
-            }
+            controlObject.position.x = oldPosition.x;
           }
-        } else if (collidingObjects[i][0] == collidingObjects[i][2]) {
+        } else if (!(Math.abs(z) < maxZ && Math.abs(z) > minZ)) {
           if (
-            !(
-              Math.abs(z) <
-                Math.max(
-                  (Math.abs(collidingObjects[i][1]),
-                  Math.abs(collidingObjects[i][3]))
-                ) &&
-              Math.abs(z) >
-                Math.min(
-                  Math.abs(collidingObjects[i][1]),
-                  Math.abs(collidingObjects[i][3])
-                )
-            )
+            (z < oldPosition.z && movingState[1] === 1) ||
+            (z > oldPosition.z && movingState[1] === -1)
           ) {
-            if (z < oldPosition.z && movingState[1] == 1)
-              controlObject.position.z = oldPosition.z;
-            else if (z > oldPosition.z && movingState[1] == -1)
-              controlObject.position.z = oldPosition.z;
+            controlObject.position.z = oldPosition.z;
           }
         }
       }
