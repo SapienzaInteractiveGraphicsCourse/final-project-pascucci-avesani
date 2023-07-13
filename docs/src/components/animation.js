@@ -89,9 +89,6 @@ export class CharacterAnimation {
         flashlightModel.position.set(0, 0.07, 0.01);
         for (let i = 1; i < 6; i++)
           model.getObjectByName("RightHand").children[i].rotateX(2);
-
-        //spotlight.target.position.set(-5, 0, -4);
-        //scene.add(spotlight.position);
       },
       function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + "% loaded");

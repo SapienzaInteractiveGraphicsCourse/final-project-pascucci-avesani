@@ -27,6 +27,8 @@ let lightButton;
 let lightsPositions = [];
 let buttonsPositions = [];
 
+const lights = {};
+
 function initScene(mode) {
   if (!mode) {
     //to handle
@@ -386,7 +388,6 @@ let buttonMeshes = {};
 function insertLights(scene) {
   const height = 6.5;
   const light = new THREE.PointLight(0xffffff, 0.5, 20);
-  const lights = {};
   const positions = [];
   let xPosition, zPosition;
   let rotate = false;
@@ -415,7 +416,10 @@ function insertLights(scene) {
       scene.add(lightsPositions[i]);
       buttonsPositions[i] = lightButton.clone(true);
       buttonsPositions[i].position.set(BxPosition, Bheight, BzPosition);
-      buttonMeshes[i] = new THREE.Mesh(new THREE.BoxGeometry(2, 1, 2), new THREE.MeshBasicMaterial({color: 0xffffff, visible: true}));
+      buttonMeshes[i] = new THREE.Mesh(
+        new THREE.BoxGeometry(2, 1, 2),
+        new THREE.MeshBasicMaterial({ color: 0xffffff, visible: true })
+      );
       buttonMeshes[i].position.set(BxPosition, Bheight, BzPosition);
       buttonMeshes[i].geometry.computeBoundingBox();
       buttonBoxes[i] = new THREE.Box3();
@@ -457,15 +461,16 @@ export function isObjectColliding(box) {
   startWallBox
     .copy(invisibleWallStartMesh.geometry.boundingBox)
     .applyMatrix4(invisibleWallStartMesh.matrixWorld);
-  
-  console.log(buttonsPositions)
-  for (let i = 0; i < buttonsPositions.length; i+=4){
+
+  for (let i = 1; i < buttonsPositions.length; i++) {
     if (buttonBoxes[i] != undefined) {
       buttonBoxes[i]
-      .copy(buttonMeshes[i].geometry.boundingBox)
-      .applyMatrix4(buttonMeshes[i].matrixWorld);
-      if(box.intersectsBox(buttonBoxes[i]))
+        .copy(buttonMeshes[i].geometry.boundingBox)
+        .applyMatrix4(buttonMeshes[i].matrixWorld);
+      if (box.intersectsBox(buttonBoxes[i])) {
         console.log("colliding", buttonBoxes[i]);
+        lights[i].intensity = 0;
+      } else lights[i].intensity = 0.5;
     }
   }
   return collidingObjects;
