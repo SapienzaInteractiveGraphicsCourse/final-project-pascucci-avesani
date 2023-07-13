@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import * as eventListener from "../controls/eventListeners.js";
-import { isObjectColliding } from "./map.js";
+import { isMazeWallColliding, isLightSwichColliding } from "./map.js";
 import { CharacterAnimation } from "./animation.js";
 import { mazeLength } from "./map.js";
 import { loadWinMenu } from "../controls/eventListeners.js";
@@ -94,17 +94,18 @@ export class Character extends CharacterAnimation {
     }
 
     flashlight = this.group.getObjectByName("SpotLight");
-    if (flashlight) {
-      this.group
-        .getObjectByName("SpotLight")
-        .target.position.set(idealLookAt.x, idealLookAt.y, idealLookAt.z);
-    }
+    if (flashlight)
+      flashlight.target.position.set(
+        idealLookAt.x,
+        idealLookAt.y,
+        idealLookAt.z
+      );
   }
 
   handleCollision(controlObject, oldPosition) {
     const { movingState } = this;
     const { x, z } = controlObject.position;
-    const collidingObjects = isObjectColliding(characterBox);
+    const collidingObjects = isMazeWallColliding(characterBox);
 
     if (collidingObjects.length === 0) {
       movingState[1] = z < oldPosition.z ? 1 : -1;
@@ -190,6 +191,15 @@ export class Character extends CharacterAnimation {
           );
           R.multiply(Q);
           break;
+        case "KeyF":
+          if (flashlight)
+            flashlight.intensity = flashlight.intensity > 0 ? 0 : 0.7;
+          delete activeKeys[key];
+          break;
+        case "KeyE":
+          isLightSwichColliding(characterBox);
+          delete activeKeys[key];
+          break;
       }
     }
     group.quaternion.copy(R);
@@ -220,19 +230,6 @@ export class Character extends CharacterAnimation {
       else if (k == "Space") this.state = "jumping";
     }
   }
-  flashlight () {
-    if (flashlight) {
-      document.addEventListener('keydown', function(event) {
-      if (event.key === 'f'){
-        if (flashlight.intensity > 0)
-         flashlight.intensity = 0;
-        else if (flashlight.intensity == 0)
-          flashlight.intensity = 0.7;
-      }
-    });
-  }
-  }
 }
-
 
 //518km

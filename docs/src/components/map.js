@@ -27,6 +27,8 @@ let ceilingLight;
 let lightButton;
 let lightsPositions = [];
 let buttonsPositions = [];
+let buttonBoxes = {};
+let buttonMeshes = {};
 
 const lights = {};
 
@@ -383,31 +385,29 @@ function addLights(scene) {
   }
 }
 
-let buttonBoxes = {};
-let buttonMeshes = {};
-
 function insertLights(scene) {
   const height = 6.5;
   const light = new THREE.PointLight(0xffffff, 0.5, 20);
   const positions = [];
-  let xPosition, zPosition;
-  let rotate = false;
   const Bheight = 1.5;
   const Bpositions = [];
-  let BxPosition, BzPosition;
 
-  for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
-    if (coordinatesArray[i] == coordinatesArray[i + 2]) {
+  for (let i = 0; i < coordinatesArray.length; i += 4) {
+    let zPosition, xPosition, BzPosition, BxPosition;
+    let rotate = false;
+
+    if (coordinatesArray[i] === coordinatesArray[i + 2]) {
       zPosition = -(coordinatesArray[i + 1] + coordinatesArray[i + 3]) / 2;
       xPosition = -coordinatesArray[i] - 5.5;
       BzPosition = zPosition;
       BxPosition = -coordinatesArray[i] - 0.7;
-    } else if (coordinatesArray[i + 1] == coordinatesArray[i + 3]) {
+    } else if (coordinatesArray[i + 1] === coordinatesArray[i + 3]) {
       zPosition = -(coordinatesArray[i] + coordinatesArray[i + 2]) / 2;
       xPosition = -coordinatesArray[i + 1] - 5.5;
       rotate = true;
     }
-    if (!(positions.includes(xPosition) && positions.includes(zPosition))) {
+
+    if (!positions.includes(xPosition) || !positions.includes(zPosition)) {
       positions.push(zPosition, xPosition);
       Bpositions.push(xPosition, zPosition);
 
@@ -415,8 +415,10 @@ function insertLights(scene) {
       if (rotate) lightsPositions[i].rotateY(Math.PI / 2);
       lightsPositions[i].position.set(xPosition, height, zPosition);
       scene.add(lightsPositions[i]);
+
       buttonsPositions[i] = lightButton.clone(true);
       buttonsPositions[i].position.set(BxPosition, Bheight, BzPosition);
+
       buttonMeshes[i] = new THREE.Mesh(
         new THREE.BoxGeometry(2, 1, 2),
         new THREE.MeshBasicMaterial({ color: 0xffffff, visible: false })
@@ -424,13 +426,13 @@ function insertLights(scene) {
       buttonMeshes[i].position.set(BxPosition, Bheight, BzPosition);
       buttonMeshes[i].geometry.computeBoundingBox();
       buttonBoxes[i] = new THREE.Box3();
+
       scene.add(buttonsPositions[i], buttonMeshes[i]);
 
       lights[i] = light.clone();
       lights[i].position.set(xPosition, height, zPosition);
       scene.add(lights[i]);
     }
-    rotate = false;
   }
 }
 
@@ -443,8 +445,23 @@ export function generateScene(scene, mode) {
   scene.background = background;
 }
 
+export function isLightSwichColliding(box) {
+  for (let i = 1; i < buttonsPositions.length; i++) {
+    const buttonBox = buttonBoxes[i];
+    const buttonMesh = buttonMeshes[i];
+    if (buttonBox && buttonMesh) {
+      buttonBox
+        .copy(buttonMesh.geometry.boundingBox)
+        .applyMatrix4(buttonMesh.matrixWorld);
+      if (box.intersectsBox(buttonBox)) {
+        lights[i].intensity = lights[i].intensity > 0 ? 0 : 1;
+      }
+    }
+  }
+}
+
 // Calculate if a given box is colliding with Map objects
-export function isObjectColliding(box) {
+export function isMazeWallColliding(box) {
   const collidingObjects = [];
   for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
     wallBoxes[j]
@@ -463,26 +480,6 @@ export function isObjectColliding(box) {
     .copy(invisibleWallStartMesh.geometry.boundingBox)
     .applyMatrix4(invisibleWallStartMesh.matrixWorld);
 
-  for (let i = 1; i < buttonsPositions.length; i++) {
-    if (buttonBoxes[i] != undefined) {
-      buttonBoxes[i]
-        .copy(buttonMeshes[i].geometry.boundingBox)
-        .applyMatrix4(buttonMeshes[i].matrixWorld);
-      if (box.intersectsBox(buttonBoxes[i])) {
-        console.log("colliding", buttonBoxes[i]);
-        document.addEventListener('keydown', function(event) {
-          if (event.key === 'e') {
-            if (lights[i].intensity > 0){
-              lights[i].intensity = 0;
-            }
-            else{
-              lights[i].intensity = 1;
-            }
-          }
-        });
-      } 
-    }
-  }
   return collidingObjects;
 }
 
