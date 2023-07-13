@@ -3,7 +3,6 @@ import * as eventListener from "../controls/eventListeners.js";
 import { isMazeWallColliding, isLightSwichColliding } from "./map.js";
 import { CharacterAnimation } from "./animation.js";
 import { mazeLength } from "./map.js";
-import { loadWinMenu } from "../controls/eventListeners.js";
 
 // Create character hit box
 const geometry = new THREE.BoxGeometry(1.6, 1.9, 1.2);
@@ -89,7 +88,7 @@ export class Character extends CharacterAnimation {
     this.camera.lookAt(idealLookAt);
 
     if (this.group.position.z < -mazeLength - 3) {
-      loadWinMenu();
+      eventListener.loadWinMenu();
       this.group.position.z = 0;
     }
 
@@ -199,6 +198,11 @@ export class Character extends CharacterAnimation {
         case "KeyE":
           isLightSwichColliding(characterBox);
           delete activeKeys[key];
+          break;
+        case "Escape":
+          canvas.style.display = "none";
+          document.getElementById("pauseMenu").style.display = "block";
+          eventListener.pauseTimer();
           break;
       }
     }

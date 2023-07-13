@@ -72,7 +72,7 @@ export class CharacterAnimation {
     );
   }
 
-  loadFlashLight(scene) {
+  loadFlashLight() {
     loader.load(
       "./assets/characters/flashlight.glb",
 

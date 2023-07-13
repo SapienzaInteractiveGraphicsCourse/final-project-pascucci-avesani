@@ -11,7 +11,7 @@ let character;
 let clock;
 let renderer;
 let scene, camera;
-var mode, chosen;
+let mode, chosen;
 
 window.onresize = function () {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -22,66 +22,53 @@ window.onresize = function () {
 
 function init() {
   mode = chosen = 1;
-
   initTimer();
 
-  document.getElementById("Easy").onclick = function () {
-    mode = 1;
-    document.getElementById("difficulty").innerText = "Game mode: \n EASY";
-  };
-  document.getElementById("Normal").onclick = function () {
-    mode = 2;
-    document.getElementById("difficulty").innerText = "Game mode: \n NORMAL";
-  };
-  document.getElementById("Hard").onclick = function () {
-    mode = 3;
-    document.getElementById("difficulty").innerText = "Game mode: \n HARD";
-  };
   document.getElementById("Start").onclick = function () {
     if (mode && chosen) {
       document.getElementById("startMenu").style.display = "none";
       canvas.style.display = "block";
-      initGame();
-      animate();
-    } else if (mode && !chosen) alert("Select a character first!");
-    else if (!mode && chosen) alert("Select a game mode first!");
-    else alert("Please select gamemode and character!");
-  };
-  document.getElementById("Resume").onclick = function () {
-    canvas.style.display = "block";
-    document.getElementById("pauseMenu").style.display = "none";
-    startTimer();
-  };
-  document.getElementById("Restart").onclick = function () {
-    location.reload();
-  };
-  document.getElementById("newGame").onclick = function () {
-    location.reload();
-  };
-  document.addEventListener("keydown", handleKeyDown);
-
-  function handleKeyDown(event) {
-    if (event.keyCode === 27 && mode && chosen) {
-      // 27 is the key code for the Escape key
-      canvas.style.display = "none";
-      document.getElementById("pauseMenu").style.display = "block";
-      pauseTimer();
-    }
-  }
-  document.getElementById("v1").onclick = function () {
-    chosen = 1;
-    document.getElementById("character").innerText = "Character: \n DAVID";
-  };
-  document.getElementById("v2").onclick = function () {
-    chosen = 2;
-    document.getElementById("character").innerText = "Character: \n SIMON";
-  };
-  document.getElementById("v3").onclick = function () {
-    chosen = 3;
-    document.getElementById("character").innerText = "Character: \n ASIA";
+      handleButtonPressed("Start");
+    } else if (mode && !chosen) showAlert("Select a character first!");
+    else if (!mode && chosen) showAlert("Select a game mode first!");
+    else showAlert("Please select gamemode and character!");
   };
 }
 
+export function handleButtonPressed(element) {
+  switch (element) {
+    case "Easy":
+      mode = 1;
+      break;
+    case "Normal":
+      mode = 2;
+      break;
+    case "Hard":
+      mode = 3;
+      break;
+    case "v1":
+      chosen = 1;
+      break;
+    case "v2":
+      chosen = 2;
+      break;
+    case "v3":
+      chosen = 3;
+      break;
+    case "Resume":
+      startTimer();
+      break;
+    case "Restart":
+      location.reload();
+      break;
+    case "newGame":
+      location.reload();
+      break;
+    case "Start":
+      initGame();
+      animate();
+  }
+}
 export function initGame() {
   // Camera and scene setup
   scene = new THREE.Scene();
@@ -139,4 +126,4 @@ export function animate() {
 
 init();
 
-export var chosen;
+export { chosen };

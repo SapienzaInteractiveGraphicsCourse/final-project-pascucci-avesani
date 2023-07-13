@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { GLTFLoader } from "GLTFLoader";
-import { activeKeys } from "../controls/eventListeners.js";
 
 var coordinatesArray;
 var mazeLength;
@@ -437,6 +436,7 @@ function insertLights(scene) {
 }
 
 export function generateScene(scene, mode) {
+  console.log(mode);
   initScene(mode);
   maze(scene);
   floor(scene);
