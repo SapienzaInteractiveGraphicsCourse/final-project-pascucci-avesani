@@ -93,11 +93,9 @@ export class Character extends CharacterAnimation {
 
     let spotlight = this.group.getObjectByName("SpotLight");
     if (spotlight) {
-      console.log(spotlight.quaternion);
       this.group
         .getObjectByName("SpotLight")
         .target.position.set(idealLookAt.x, idealLookAt.y, idealLookAt.z);
-      console.log(idealLookAt);
     }
   }
 

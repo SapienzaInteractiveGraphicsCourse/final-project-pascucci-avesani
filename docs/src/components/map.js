@@ -23,7 +23,9 @@ let ceilingBaseColor, ceilingAmbientOcclusion, ceilingHeight, ceilingNormal;
 
 let background;
 let ceilingLight;
+let lightButton;
 let lightsPositions = [];
+let buttonsPositions = [];
 
 function initScene(mode) {
   if (!mode) {
@@ -352,18 +354,34 @@ function loadLightModel() {
       console.error(error);
     }
   );
+  modelLoader.load(
+    "./assets/lightbutton.glb",
+    function (glb) {
+      console.log("Loading light buttons");
+      lightButton = glb.scene;
+      lightButton.scale.set(0.3, 0.3, 0.3);
+      lightButton.rotateZ(Math.PI);
+    },
+    null,
+    function (error) {
+      console.log(error);
+    }
+  );
 }
 
 function addLights(scene) {
   const interval = setInterval(checkCondition, 1000);
   loadLightModel(scene);
   function checkCondition() {
-    if (ceilingLight) {
+    if (ceilingLight && lightButton) {
       clearInterval(interval);
       insertLights(scene);
     }
   }
 }
+
+let buttonBoxes = {};
+let buttonMeshes = {};
 
 function insertLights(scene) {
   const height = 6.5;
@@ -372,11 +390,16 @@ function insertLights(scene) {
   const positions = [];
   let xPosition, zPosition;
   let rotate = false;
+  const Bheight = 1.5;
+  const Bpositions = [];
+  let BxPosition, BzPosition;
 
   for (let i = 0, j = 0; i < coordinatesArray.length; i += 4, j++) {
     if (coordinatesArray[i] == coordinatesArray[i + 2]) {
       zPosition = -(coordinatesArray[i + 1] + coordinatesArray[i + 3]) / 2;
       xPosition = -coordinatesArray[i] - 5.5;
+      BzPosition = zPosition;
+      BxPosition = -coordinatesArray[i] - 0.7;
     } else if (coordinatesArray[i + 1] == coordinatesArray[i + 3]) {
       zPosition = -(coordinatesArray[i] + coordinatesArray[i + 2]) / 2;
       xPosition = -coordinatesArray[i + 1] - 5.5;
@@ -384,11 +407,19 @@ function insertLights(scene) {
     }
     if (!(positions.includes(xPosition) && positions.includes(zPosition))) {
       positions.push(zPosition, xPosition);
+      Bpositions.push(xPosition, zPosition);
 
       lightsPositions[i] = ceilingLight.clone(true);
       if (rotate) lightsPositions[i].rotateY(Math.PI / 2);
       lightsPositions[i].position.set(xPosition, height, zPosition);
       scene.add(lightsPositions[i]);
+      buttonsPositions[i] = lightButton.clone(true);
+      buttonsPositions[i].position.set(BxPosition, Bheight, BzPosition);
+      buttonMeshes[i] = new THREE.Mesh(new THREE.BoxGeometry(2, 1, 2), new THREE.MeshBasicMaterial({color: 0xffffff, visible: true}));
+      buttonMeshes[i].position.set(BxPosition, Bheight, BzPosition);
+      buttonMeshes[i].geometry.computeBoundingBox();
+      buttonBoxes[i] = new THREE.Box3();
+      scene.add(buttonsPositions[i], buttonMeshes[i]);
 
       lights[i] = light.clone();
       lights[i].position.set(xPosition, height, zPosition);
@@ -426,6 +457,16 @@ export function isObjectColliding(box) {
   startWallBox
     .copy(invisibleWallStartMesh.geometry.boundingBox)
     .applyMatrix4(invisibleWallStartMesh.matrixWorld);
+  
+  for (let i = 0; i < buttonsPositions.length; i++){
+    if (buttonBoxes[i] != undefined) {
+      buttonBoxes[i]
+      .copy(buttonMeshes[i].geometry.boundingBox)
+      .applyMatrix4(buttonMeshes[i].matrixWorld);
+      if(buttonBoxes[i].intersectsBox(box))
+        console.log("schaerfinho");
+    }
+  }
   return collidingObjects;
 }
 
