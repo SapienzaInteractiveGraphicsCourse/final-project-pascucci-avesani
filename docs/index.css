@@ -69,7 +69,13 @@ body {
   padding-bottom: 10px;
 }
 
-.card:hover {
+.card.easy:hover {
   background-color: green;
-  /* Add any other styling you want */
 }
+.card.normal:hover {
+  background-color: orange;
+}
+.card.hard:hover {
+  background-color: red;
+}
+
