@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { GLTFLoader } from "GLTFLoader";
+import { activeKeys } from "../controls/eventListeners.js";
 
 var coordinatesArray;
 var mazeLength;
@@ -418,7 +419,7 @@ function insertLights(scene) {
       buttonsPositions[i].position.set(BxPosition, Bheight, BzPosition);
       buttonMeshes[i] = new THREE.Mesh(
         new THREE.BoxGeometry(2, 1, 2),
-        new THREE.MeshBasicMaterial({ color: 0xffffff, visible: true })
+        new THREE.MeshBasicMaterial({ color: 0xffffff, visible: false })
       );
       buttonMeshes[i].position.set(BxPosition, Bheight, BzPosition);
       buttonMeshes[i].geometry.computeBoundingBox();
@@ -469,8 +470,17 @@ export function isObjectColliding(box) {
         .applyMatrix4(buttonMeshes[i].matrixWorld);
       if (box.intersectsBox(buttonBoxes[i])) {
         console.log("colliding", buttonBoxes[i]);
-        lights[i].intensity = 0;
-      } else lights[i].intensity = 0.5;
+        document.addEventListener('keydown', function(event) {
+          if (event.key === 'e') {
+            if (lights[i].intensity > 0){
+              lights[i].intensity = 0;
+            }
+            else{
+              lights[i].intensity = 1;
+            }
+          }
+        });
+      } 
     }
   }
   return collidingObjects;

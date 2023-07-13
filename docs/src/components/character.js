@@ -16,6 +16,8 @@ characterCube.position.y = 0.95;
 characterCube.geometry.computeBoundingBox();
 const characterBox = new THREE.Box3();
 
+var flashlight;
+
 export class Character extends CharacterAnimation {
   constructor(scene, camera) {
     super(scene, characterCube);
@@ -91,8 +93,8 @@ export class Character extends CharacterAnimation {
       this.group.position.z = 0;
     }
 
-    let spotlight = this.group.getObjectByName("SpotLight");
-    if (spotlight) {
+    flashlight = this.group.getObjectByName("SpotLight");
+    if (flashlight) {
       this.group
         .getObjectByName("SpotLight")
         .target.position.set(idealLookAt.x, idealLookAt.y, idealLookAt.z);
@@ -218,4 +220,19 @@ export class Character extends CharacterAnimation {
       else if (k == "Space") this.state = "jumping";
     }
   }
+  flashlight () {
+    if (flashlight) {
+      document.addEventListener('keydown', function(event) {
+      if (event.key === 'f'){
+        if (flashlight.intensity > 0)
+         flashlight.intensity = 0;
+        else if (flashlight.intensity == 0)
+          flashlight.intensity = 0.7;
+      }
+    });
+  }
+  }
 }
+
+
+//518km

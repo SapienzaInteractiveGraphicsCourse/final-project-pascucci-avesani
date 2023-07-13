@@ -133,6 +133,7 @@ export function animate() {
   character.animation();
   character.updateState();
   character.movement(clock.getDelta());
+  character.flashlight();
 
   renderer.render(scene, camera);
 }
