@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
-          "GLTFLoader": "https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js",
-          "OrbitControls": "https://unpkg.com/three@0.154.0/examples/jsm/controls/OrbitControls.js"
-        }
-      }
-    </script>
     <meta charset="utf-8" />
     <title>Maze Runner</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="./index.css">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./assets/logo-no-background.ico"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./index.css" />
   </head>
   <body>
-    <div class="container text-center" id="startMenu" style="display: block;">
+    <div class="container text-center" id="startMenu" style="display: block">
       <div class="row mt-5 mb-2 p-4">
         <div class="col-4"></div>
         <div class="col-4 text-center">
@@ -25,26 +26,36 @@
       </div>
       <div class="row">
         <div class="col mt-3">
-          <h2 class="btn-start" style="background-color: transparent;">Please select the game difficulty:</h2>
+          <h2 class="btn-start" style="background-color: transparent">
+            Please select the game difficulty:
+          </h2>
         </div>
         <div class="col">
-          <h2 class="btn-start" style="background-color: transparent;">Please select your character</h2>
-          <h4 class="btn-start" style="text-decoration: none; background: none;"> You can use orbit controls to view the model!</h4>
+          <h2 class="btn-start" style="background-color: transparent">
+            Please select your character
+          </h2>
+          <h4 class="btn-start" style="text-decoration: none; background: none">
+            You can use orbit controls to view the model!
+          </h4>
         </div>
       </div>
       <div class="row mt-3 pt-3">
         <div class="col">
-            <div class="card easy" style="width: 12rem;">
-              <img src="./assets/maps/easy.png" class="card-img-top" alt="...">
-              <div class="card-body">
-                <h5 class="card-title">EASY</h5>
-                <button class="btn-select" id="Easy">Select</button>
-              </div>
+          <div class="card easy" style="width: 12rem">
+            <img src="./assets/maps/easy.png" class="card-img-top" alt="..." />
+            <div class="card-body">
+              <h5 class="card-title">EASY</h5>
+              <button class="btn-select" id="Easy">Select</button>
             </div>
+          </div>
         </div>
         <div class="col">
-          <div class="card normal" style="width: 12rem;">
-            <img src="./assets/maps/normal.png" class="card-img-top" alt="...">
+          <div class="card normal" style="width: 12rem">
+            <img
+              src="./assets/maps/normal.png"
+              class="card-img-top"
+              alt="..."
+            />
             <div class="card-body">
               <h5 class="card-title">NORMAL</h5>
               <button class="btn-select" id="Normal">Select</button>
@@ -52,25 +63,25 @@
           </div>
         </div>
         <div class="col">
-          <div class="card hard" style="width: 12rem;">
-            <img src="./assets/maps/hard.png" class="card-img-top" alt="...">
+          <div class="card hard" style="width: 12rem">
+            <img src="./assets/maps/hard.png" class="card-img-top" alt="..." />
             <div class="card-body">
               <h5 class="card-title">HARD</h5>
               <button class="btn-select" id="Hard">Select</button>
             </div>
           </div>
         </div>
-          <div class="col">
-              <canvas id="model1" style="height: 17rem; width: 12rem;"></canvas>
-              <button class="btn-select" id="v1">David</h5>
-          </div>
-          <div class="col">
-              <canvas id="model2" style="height: 17rem; width: 12rem;"></canvas>
-              <button class="btn-select" id="v2">Simon</h5>
-          </div>
-          <div class="col">
-            <canvas id="model3" style="height: 17rem; width: 12rem;"></canvas>
-            <button class="btn-select" id="v3">Asia</h5>
+        <div class="col">
+          <canvas id="model1" style="height: 17rem; width: 12rem"></canvas>
+          <button class="btn-select" id="v1">David</button>
+        </div>
+        <div class="col">
+          <canvas id="model2" style="height: 17rem; width: 12rem"></canvas>
+          <button class="btn-select" id="v2">Simon</button>
+        </div>
+        <div class="col">
+          <canvas id="model3" style="height: 17rem; width: 12rem"></canvas>
+          <button class="btn-select" id="v3">Asia</button>
         </div>
       </div>
       <div class="row mt-4 pt-4">
@@ -78,14 +89,16 @@
           <p class="lead btn-start" id="difficulty">Game mode:</p>
         </div>
         <div class="col m-2 text-center">
-          <button id="Start" class="btn btn-start" style="font-size: 32px;">START GAME</button>
+          <button id="Start" class="btn btn-start" style="font-size: 32px">
+            START GAME
+          </button>
         </div>
         <div class="col m-2 text-center text-light">
           <p class="lead btn-start" id="character">Character</p>
         </div>
       </div>
     </div>
-    <div class="Menu" id="pauseMenu" style="display: none;">
+    <div class="Menu" id="pauseMenu" style="display: none">
       <div class="container text-center mt-5">
         <div class="row">
           <div class="col-4"></div>
@@ -97,19 +110,29 @@
             </div>
             <div class="row mb-5 gy-5">
               <div class="col">
-                <input type="button" class="btn-select btn-xl pause-btn" id="Resume" value="Resume"></input >
+                <input
+                  type="button"
+                  class="btn-select btn-xl pause-btn"
+                  id="Resume"
+                  value="Resume"
+                />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col">
-                <input type="button" class="btn-select btn-xl pause-btn" id="Restart" value="Restart"></input >
+                <input
+                  type="button"
+                  class="btn-select btn-xl pause-btn"
+                  id="Restart"
+                  value="Restart"
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>    
-    <div class="Menu" id="winMenu" style="display: none;">
+    </div>
+    <div class="Menu" id="winMenu" style="display: none">
       <div class="container text-center mt-5">
         <div class="row">
           <div class="col-4"></div>
@@ -122,16 +145,32 @@
             <div class="row mt-5 mb-3">
               <div class="text-center"><h3 id="winTime"></h3></div>
               <div class="col mt-5">
-                <button class="btn-select pause-btn m-5" id="newGame">Start a new game</button>
+                <button class="btn-select pause-btn m-5" id="newGame">
+                  Start a new game
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <canvas id="canvas" style="display: none;"></canvas>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.154.0/build/three.module.js",
+          "GLTFLoader": "https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js",
+          "OrbitControls": "https://unpkg.com/three@0.154.0/examples/jsm/controls/OrbitControls.js"
+        }
+      }
+    </script>
+    <canvas id="canvas" style="display: none"></canvas>
     <script type="module" src="./main.js"></script>
     <script type="module" src="./src/components/menu.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
