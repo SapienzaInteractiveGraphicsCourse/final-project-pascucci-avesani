@@ -458,13 +458,14 @@ export function isObjectColliding(box) {
     .copy(invisibleWallStartMesh.geometry.boundingBox)
     .applyMatrix4(invisibleWallStartMesh.matrixWorld);
   
-  for (let i = 0; i < buttonsPositions.length; i++){
+  console.log(buttonsPositions)
+  for (let i = 0; i < buttonsPositions.length; i+=4){
     if (buttonBoxes[i] != undefined) {
       buttonBoxes[i]
       .copy(buttonMeshes[i].geometry.boundingBox)
       .applyMatrix4(buttonMeshes[i].matrixWorld);
-      if(buttonBoxes[i].intersectsBox(box))
-        console.log("schaerfinho");
+      if(box.intersectsBox(buttonBoxes[i]))
+        console.log("colliding", buttonBoxes[i]);
     }
   }
   return collidingObjects;
