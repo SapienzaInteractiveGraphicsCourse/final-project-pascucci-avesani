@@ -14,7 +14,7 @@ let scene, camera;
 var mode, chosen;
 
 function init() {
-  mode = chosen = 0;
+  mode = chosen = 1;
 
   initTimer();
 

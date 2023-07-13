@@ -90,6 +90,15 @@ export class Character extends CharacterAnimation {
       loadWinMenu();
       this.group.position.z = 0;
     }
+
+    let spotlight = this.group.getObjectByName("SpotLight");
+    if (spotlight) {
+      console.log(spotlight.quaternion);
+      this.group
+        .getObjectByName("SpotLight")
+        .target.position.set(idealLookAt.x, idealLookAt.y, idealLookAt.z);
+      console.log(idealLookAt);
+    }
   }
 
   handleCollision(controlObject, oldPosition) {

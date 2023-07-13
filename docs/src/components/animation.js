@@ -24,6 +24,10 @@ let currentArmRotation = 0;
 let currentHeadRotation = 0;
 let currentTorsoRotation = 0;
 
+let spotlight = new THREE.SpotLight(0xffffff, 0.5);
+spotlight.position.set(-5, 0, -4);
+spotlight.name = "SpotLight";
+
 export class CharacterAnimation {
   constructor(scene, characterCube) {
     this.group = new THREE.Group();
@@ -39,8 +43,9 @@ export class CharacterAnimation {
     // Wait for the model to be loaded and initialized
     function checkCondition() {
       if (model) {
-        load();
         clearInterval(interval);
+        load(scene);
+        scene.add(spotlight.target);
       }
     }
   }
@@ -67,7 +72,7 @@ export class CharacterAnimation {
     );
   }
 
-  loadFlashLight() {
+  loadFlashLight(scene) {
     loader.load(
       "./assets/characters/flashlight.glb",
 
@@ -77,12 +82,16 @@ export class CharacterAnimation {
         model
           .getObjectByName("RightHand")
           .add(flashLight.getObjectByName("Sketchfab_model"));
+        model.getObjectByName("Sketchfab_model").add(spotlight);
 
         const flashlightModel = model.getObjectByName("Sketchfab_model");
         flashlightModel.scale.set(0.03, 0.03, 0.03);
         flashlightModel.position.set(0, 0.07, 0.01);
         for (let i = 1; i < 6; i++)
           model.getObjectByName("RightHand").children[i].rotateX(2);
+
+        //spotlight.target.position.set(-5, 0, -4);
+        //scene.add(spotlight.position);
       },
       function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
