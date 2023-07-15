@@ -13,8 +13,9 @@ Click here to play the demo of the game [Game demo link](https://sapienzainterac
 # Commands
 
 - **_W A S D_** : Move the character
+- - **_SHIFT_**: Run
 - **_SPACE_**: Jump
-- **_F_**: Switch on/off the potlight
+- **_F_**: Switch on/off the Spotlight
 - **_E_**: Interact with the objects
 - **_ESC_**: Pause menu
 
