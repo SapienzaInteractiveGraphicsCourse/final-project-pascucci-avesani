@@ -5,6 +5,15 @@ body {
   padding: 0;
   overflow: hidden;
 }
+.title-start {
+  background-color: grey;
+  border-width: 0rem;
+  text-decoration: underline orangered;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+
 .btn-start {
   background-color: grey;
   border-width: 0rem;
@@ -29,6 +38,15 @@ body {
 .btn-select:hover {
   background-color: orange;
 }
+
+.col-model {
+  border-radius: 5px;
+}
+
+.col-model:hover {
+  background-color: green;
+}
+
 .top-text {
   background-color: orangered;
   width: auto;

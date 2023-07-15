@@ -39,26 +39,44 @@ document.addEventListener("keypress", (event) => {
 
 document.getElementById("Easy").onclick = function () {
   document.getElementById("difficulty").innerText = "Game mode: \n EASY";
+  document.getElementById("card-easy").style.backgroundColor = "green";
+  document.getElementById("card-normal").style.backgroundColor = "white";
+  document.getElementById("card-hard").style.backgroundColor = "white";
   handleButtonPressed("Easy");
 };
 document.getElementById("Normal").onclick = function () {
   document.getElementById("difficulty").innerText = "Game mode: \n NORMAL";
+  document.getElementById("card-easy").style.backgroundColor = "white";
+  document.getElementById("card-normal").style.backgroundColor = "orange";
+  document.getElementById("card-hard").style.backgroundColor = "white";
   handleButtonPressed("Normal");
 };
 document.getElementById("Hard").onclick = function () {
   document.getElementById("difficulty").innerText = "Game mode: \n HARD";
+  document.getElementById("card-easy").style.backgroundColor = "white";
+  document.getElementById("card-normal").style.backgroundColor = "white";
+  document.getElementById("card-hard").style.backgroundColor = "red";
   handleButtonPressed("Hard");
 };
 document.getElementById("v1").onclick = function () {
   document.getElementById("character").innerText = "Character: \n DAVID";
+  document.getElementById("col-model-1").style.backgroundColor = "green";
+  document.getElementById("col-model-2").style.backgroundColor = "transparent";
+  document.getElementById("col-model-3").style.backgroundColor = "transparent";
   handleButtonPressed("v1");
 };
 document.getElementById("v2").onclick = function () {
   document.getElementById("character").innerText = "Character: \n SIMON";
+  document.getElementById("col-model-1").style.backgroundColor = "transparent";
+  document.getElementById("col-model-2").style.backgroundColor = "green";
+  document.getElementById("col-model-3").style.backgroundColor = "transparent";
   handleButtonPressed("v2");
 };
 document.getElementById("v3").onclick = function () {
   document.getElementById("character").innerText = "Character: \n ASIA";
+  document.getElementById("col-model-1").style.backgroundColor = "transparent";
+  document.getElementById("col-model-2").style.backgroundColor = "transparent";
+  document.getElementById("col-model-3").style.backgroundColor = "green";
   handleButtonPressed("v3");
 };
 document.getElementById("Resume").onclick = function () {

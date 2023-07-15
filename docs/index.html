@@ -32,12 +32,12 @@
         </div>
         <div class="row">
           <div class="col mt-3">
-            <h2 class="btn-start" style="background-color: transparent">
+            <h2 class="title-start" style="background-color: transparent">
               Please select the game difficulty:
             </h2>
           </div>
           <div class="col">
-            <h2 class="btn-start" style="background-color: transparent">
+            <h2 class="title-start" style="background-color: transparent">
               Please select your character
             </h2>
             <h4
@@ -50,7 +50,7 @@
         </div>
         <div class="row mt-3 pt-3">
           <div class="col">
-            <div class="card easy" style="width: 12rem">
+            <div class="card easy" id="card-easy" style="width: 12rem">
               <img
                 src="./assets/maps/easy.png"
                 class="card-img-top"
@@ -63,7 +63,7 @@
             </div>
           </div>
           <div class="col">
-            <div class="card normal" style="width: 12rem">
+            <div class="card normal" id="card-normal" style="width: 12rem">
               <img
                 src="./assets/maps/normal.png"
                 class="card-img-top"
@@ -76,7 +76,7 @@
             </div>
           </div>
           <div class="col">
-            <div class="card hard" style="width: 12rem">
+            <div class="card hard" id="card-hard" style="width: 12rem">
               <img
                 src="./assets/maps/hard.png"
                 class="card-img-top"
@@ -88,22 +88,22 @@
               </div>
             </div>
           </div>
-          <div class="col">
+          <div class="col col-model" id="col-model-1">
             <canvas id="model1" style="height: 17rem; width: 12rem"></canvas>
             <button class="btn-select" id="v1">David</button>
           </div>
-          <div class="col">
+          <div class="col col-model" id="col-model-2">
             <canvas id="model2" style="height: 17rem; width: 12rem"></canvas>
             <button class="btn-select" id="v2">Simon</button>
           </div>
-          <div class="col">
+          <div class="col col-model" id="col-model-3">
             <canvas id="model3" style="height: 17rem; width: 12rem"></canvas>
             <button class="btn-select" id="v3">Asia</button>
           </div>
         </div>
         <div class="row mt-4 pt-4">
           <div class="col m-2 text-center text-light">
-            <p class="lead btn-start" id="difficulty">Game mode:</p>
+            <p class="lead title-start" id="difficulty">Game mode:</p>
           </div>
           <div class="col m-2 text-center">
             <button id="Start" class="btn btn-start" style="font-size: 32px">
@@ -111,7 +111,7 @@
             </button>
           </div>
           <div class="col m-2 text-center text-light">
-            <p class="lead btn-start" id="character">Character</p>
+            <p class="lead title-start" id="character">Character</p>
           </div>
         </div>
       </div>
