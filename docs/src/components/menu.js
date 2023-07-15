@@ -70,7 +70,7 @@ for (let i = 0; i < 3; i++) {
       function (xhr) {
         loadingStatus = (xhr.loaded / xhr.total) * 100;
         document.getElementById("loadingStatus").innerText =
-          "Loading character";
+          " loading character";
       }
     )
   );

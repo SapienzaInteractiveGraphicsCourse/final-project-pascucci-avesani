@@ -357,7 +357,7 @@ function loadLightModel() {
     function (weii) {
       loadingStatus = (weii.loaded / weii.total) * 100;
       document.getElementById("loadingStatus").innerText =
-        "Loading ceiling light";
+        " loading ceiling light";
     },
     function (error) {
       console.error(error);
@@ -373,7 +373,7 @@ function loadLightModel() {
     function (xhr) {
       loadingStatus = (xhr.loaded / xhr.total) * 100;
       document.getElementById("loadingStatus").innerText =
-        "Loading light button";
+        " loading light switch button";
     },
     function (error) {
       console.log(error);

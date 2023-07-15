@@ -2,6 +2,8 @@ body {
   margin: 0;
   background-image: url("assets/wallText/Stylized_Sci-fi_Wall_001_basecolor.jpg");
   background-size: 100vh cover;
+  padding: 0;
+  overflow: hidden;
 }
 .btn-start {
   background-color: grey;

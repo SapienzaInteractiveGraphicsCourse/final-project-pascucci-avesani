@@ -86,7 +86,7 @@ export class CharacterAnimation {
       function (xhr) {
         loadingStatus = (xhr.loaded / xhr.total) * 100;
         document.getElementById("loadingStatus").innerText =
-          "Loading character";
+          " loading character";
       },
       function (error) {
         console.error(error);
@@ -114,7 +114,7 @@ export class CharacterAnimation {
       function (xhr) {
         loadingStatus = (xhr.loaded / xhr.total) * 100;
         document.getElementById("loadingStatus").innerText =
-          "Loading flashlight";
+          " loading flashlight";
       },
       function (error) {
         console.error(error);
