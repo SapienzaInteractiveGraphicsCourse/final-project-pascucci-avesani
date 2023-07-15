@@ -354,10 +354,10 @@ function loadLightModel() {
     function (glb) {
       ceilingLight = glb.scene;
     },
-    function (xhr) {
-      loadingStatus = (xhr.loaded / xhr.total) * 100;
+    function (weii) {
+      loadingStatus = (weii.loaded / weii.total) * 100;
       document.getElementById("loadingStatus").innerText =
-        "Loading flashlight: " + " " + loadingStatus + "%";
+        "Loading ceiling light";
     },
     function (error) {
       console.error(error);
@@ -373,7 +373,7 @@ function loadLightModel() {
     function (xhr) {
       loadingStatus = (xhr.loaded / xhr.total) * 100;
       document.getElementById("loadingStatus").innerText =
-        "Loading flashlight: " + " " + loadingStatus + "%";
+        "Loading light button";
     },
     function (error) {
       console.log(error);
