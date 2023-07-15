@@ -200,6 +200,7 @@ export class Character extends CharacterAnimation {
           delete activeKeys[key];
           break;
         case "Escape":
+          document.documentElement.style.cursor = "auto";
           canvas.style.display = "none";
           document.getElementById("pauseMenu").style.display = "block";
           eventListener.pauseTimer();

@@ -82,6 +82,7 @@ document.getElementById("v3").onclick = function () {
 document.getElementById("Resume").onclick = function () {
   canvas.style.display = "block";
   document.getElementById("pauseMenu").style.display = "none";
+  document.documentElement.style.cursor = "none";
   handleButtonPressed("Resume");
 };
 document.getElementById("Restart").onclick = function () {

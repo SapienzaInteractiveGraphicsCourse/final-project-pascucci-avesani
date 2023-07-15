@@ -65,6 +65,7 @@ export class CharacterAnimation {
         document.getElementById("loadingScreen").style.display = "none";
         document.getElementById("canvas").style.display = "block";
         document.getElementById("commands").style.display = "block";
+        document.documentElement.style.cursor = "none";
         startTimer();
       }
     }
