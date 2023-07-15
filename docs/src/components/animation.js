@@ -64,6 +64,7 @@ export class CharacterAnimation {
         scene.add(spotlight.target);
         document.getElementById("loadingScreen").style.display = "none";
         document.getElementById("canvas").style.display = "block";
+        document.getElementById("commands").style.display = "block";
         startTimer();
       }
     }

@@ -96,3 +96,15 @@ body {
   padding-left: 5vh;
   text-align: center;
 }
+
+.commands {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.commands img {
+  max-width: 70%;
+  max-height: 70%;
+}

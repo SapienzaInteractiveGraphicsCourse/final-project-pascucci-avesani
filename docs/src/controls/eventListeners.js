@@ -88,6 +88,7 @@ export function initTimer() {
 function updateTimer() {
   let formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
   timerElement.textContent = `${minutes}:${formattedSeconds}`;
+  if (seconds > 3) document.getElementById("commands").style.display = "none";
 }
 
 export function deleteTimer() {
