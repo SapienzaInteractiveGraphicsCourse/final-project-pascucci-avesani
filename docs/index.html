@@ -14,87 +14,105 @@
       integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+
     <link rel="stylesheet" href="./index.css" />
   </head>
   <body>
-    <div class="container text-center" id="startMenu" style="display: block">
-      <div class="row mt-5 mb-2 p-4">
-        <div class="col-4"></div>
-        <div class="col-4 text-center">
-          <h1 class="top-text">START MENU</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col mt-3">
-          <h2 class="btn-start" style="background-color: transparent">
-            Please select the game difficulty:
-          </h2>
-        </div>
-        <div class="col">
-          <h2 class="btn-start" style="background-color: transparent">
-            Please select your character
-          </h2>
-          <h4 class="btn-start" style="text-decoration: none; background: none">
-            You can use orbit controls to view the model!
-          </h4>
-        </div>
-      </div>
-      <div class="row mt-3 pt-3">
-        <div class="col">
-          <div class="card easy" style="width: 12rem">
-            <img src="./assets/maps/easy.png" class="card-img-top" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title">EASY</h5>
-              <button class="btn-select" id="Easy">Select</button>
-            </div>
+    <div id="showMenu" style="display: none">
+      <div class="container text-center" id="startMenu" style="display: block">
+        <div class="row mt-5 mb-2 p-4">
+          <div class="col-4"></div>
+          <div class="col-4 text-center">
+            <h1 class="top-text">START MENU</h1>
           </div>
         </div>
-        <div class="col">
-          <div class="card normal" style="width: 12rem">
-            <img
-              src="./assets/maps/normal.png"
-              class="card-img-top"
-              alt="..."
-            />
-            <div class="card-body">
-              <h5 class="card-title">NORMAL</h5>
-              <button class="btn-select" id="Normal">Select</button>
-            </div>
+        <div class="row">
+          <div class="col mt-3">
+            <h2 class="btn-start" style="background-color: transparent">
+              Please select the game difficulty:
+            </h2>
+          </div>
+          <div class="col">
+            <h2 class="btn-start" style="background-color: transparent">
+              Please select your character
+            </h2>
+            <h4
+              class="btn-start"
+              style="text-decoration: none; background: none"
+            >
+              You can use orbit controls to view the model!
+            </h4>
           </div>
         </div>
-        <div class="col">
-          <div class="card hard" style="width: 12rem">
-            <img src="./assets/maps/hard.png" class="card-img-top" alt="..." />
-            <div class="card-body">
-              <h5 class="card-title">HARD</h5>
-              <button class="btn-select" id="Hard">Select</button>
+        <div class="row mt-3 pt-3">
+          <div class="col">
+            <div class="card easy" style="width: 12rem">
+              <img
+                src="./assets/maps/easy.png"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">EASY</h5>
+                <button class="btn-select" id="Easy">Select</button>
+              </div>
             </div>
           </div>
+          <div class="col">
+            <div class="card normal" style="width: 12rem">
+              <img
+                src="./assets/maps/normal.png"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">NORMAL</h5>
+                <button class="btn-select" id="Normal">Select</button>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card hard" style="width: 12rem">
+              <img
+                src="./assets/maps/hard.png"
+                class="card-img-top"
+                alt="..."
+              />
+              <div class="card-body">
+                <h5 class="card-title">HARD</h5>
+                <button class="btn-select" id="Hard">Select</button>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <canvas id="model1" style="height: 17rem; width: 12rem"></canvas>
+            <button class="btn-select" id="v1">David</button>
+          </div>
+          <div class="col">
+            <canvas id="model2" style="height: 17rem; width: 12rem"></canvas>
+            <button class="btn-select" id="v2">Simon</button>
+          </div>
+          <div class="col">
+            <canvas id="model3" style="height: 17rem; width: 12rem"></canvas>
+            <button class="btn-select" id="v3">Asia</button>
+          </div>
         </div>
-        <div class="col">
-          <canvas id="model1" style="height: 17rem; width: 12rem"></canvas>
-          <button class="btn-select" id="v1">David</button>
-        </div>
-        <div class="col">
-          <canvas id="model2" style="height: 17rem; width: 12rem"></canvas>
-          <button class="btn-select" id="v2">Simon</button>
-        </div>
-        <div class="col">
-          <canvas id="model3" style="height: 17rem; width: 12rem"></canvas>
-          <button class="btn-select" id="v3">Asia</button>
-        </div>
-      </div>
-      <div class="row mt-4 pt-4">
-        <div class="col m-2 text-center text-light">
-          <p class="lead btn-start" id="difficulty">Game mode:</p>
-        </div>
-        <div class="col m-2 text-center">
-          <button id="Start" class="btn btn-start" style="font-size: 32px">
-            START GAME
-          </button>
-        </div>
-        <div class="col m-2 text-center text-light">
-          <p class="lead btn-start" id="character">Character</p>
+        <div class="row mt-4 pt-4">
+          <div class="col m-2 text-center text-light">
+            <p class="lead btn-start" id="difficulty">Game mode:</p>
+          </div>
+          <div class="col m-2 text-center">
+            <button id="Start" class="btn btn-start" style="font-size: 32px">
+              START GAME
+            </button>
+          </div>
+          <div class="col m-2 text-center text-light">
+            <p class="lead btn-start" id="character">Character</p>
+          </div>
         </div>
       </div>
     </div>
@@ -152,6 +170,20 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="Menu" id="loadingScreen" style="display: block">
+      <div class="loadingLogo">
+        <img src="/docs/assets/logo-no-background.png" alt="" />
+      </div>
+      <div class="overlay-text">
+        <span class="animated-icon">
+          <p>
+            <i class="fas fa-cog fa-spin"></i>Lading status:<span
+              id="loadingStatus"
+            ></span>
+          </p>
+        </span>
       </div>
     </div>
     <script type="importmap">

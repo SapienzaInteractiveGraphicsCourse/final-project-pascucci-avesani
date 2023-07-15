@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { chosen } from "../../main.js";
 import { GLTFLoader } from "GLTFLoader";
+import { startTimer, initTimer } from "../controls/eventListeners.js";
 let model, flashLight;
 
 // Define character
@@ -28,15 +29,18 @@ let spotlight = new THREE.SpotLight(0xffffff, 0);
 spotlight.position.set(-5, 0, -4);
 spotlight.name = "SpotLight";
 
+let loadingStatus = 0;
+
 export class CharacterAnimation {
   constructor(scene, characterCube) {
     this.group = new THREE.Group();
-    this.initialize(scene, characterCube);
+    this.initializeModel(scene, characterCube);
   }
 
-  initialize(scene, characterCube) {
+  initializeModel(scene, characterCube) {
     const interval = setInterval(checkCondition, 1000);
     const load = this.loadFlashLight;
+    const loadFlashLight = this.initializeFlashlight;
 
     this.loadModel(scene, characterCube);
 
@@ -45,7 +49,22 @@ export class CharacterAnimation {
       if (model) {
         clearInterval(interval);
         load(scene);
+        loadFlashLight(scene);
+      }
+    }
+  }
+
+  initializeFlashlight(scene) {
+    const interval = setInterval(checkCondition, 1000);
+
+    // Wait for the model to be loaded and initialized
+    function checkCondition() {
+      if (flashLight) {
+        clearInterval(interval);
         scene.add(spotlight.target);
+        document.getElementById("loadingScreen").style.display = "none";
+        document.getElementById("canvas").style.display = "block";
+        startTimer();
       }
     }
   }
@@ -64,7 +83,9 @@ export class CharacterAnimation {
         scene.add(group);
       },
       function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        loadingStatus = (xhr.loaded / xhr.total) * 100;
+        document.getElementById("loadingStatus").innerText =
+          "Loading character: " + " " + loadingStatus + "%";
       },
       function (error) {
         console.error(error);
@@ -77,7 +98,6 @@ export class CharacterAnimation {
       "./assets/characters/flashlight.glb",
 
       function (gltf) {
-        console.log("Loading flashlight");
         flashLight = gltf.scene;
         model
           .getObjectByName("RightHand")
@@ -91,7 +111,9 @@ export class CharacterAnimation {
           model.getObjectByName("RightHand").children[i].rotateX(2);
       },
       function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        loadingStatus = (xhr.loaded / xhr.total) * 100;
+        document.getElementById("loadingStatus").innerText =
+          "Loading flashlight: " + " " + loadingStatus + "%";
       },
       function (error) {
         console.error(error);

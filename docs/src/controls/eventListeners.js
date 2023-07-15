@@ -51,7 +51,7 @@ document.getElementById("Hard").onclick = function () {
 };
 document.getElementById("v1").onclick = function () {
   document.getElementById("character").innerText = "Character: \n DAVID";
-  handleButtonPressed("Hard");
+  handleButtonPressed("v1");
 };
 document.getElementById("v2").onclick = function () {
   document.getElementById("character").innerText = "Character: \n SIMON";

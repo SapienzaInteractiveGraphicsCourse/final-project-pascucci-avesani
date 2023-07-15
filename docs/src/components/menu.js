@@ -46,33 +46,72 @@ camera2.position.z = 1;
 camera3.position.z = 1;
 
 // Set game window size
-let canvas1 = document.getElementById("model1");
-const renderer1 = new THREE.WebGLRenderer({ canvas: canvas1 });
-renderer1.setSize(canvas1.clientWidth, canvas1.clientHeight);
+let canvas1, renderer1;
+let canvas2, renderer2;
+let canvas3, renderer3;
 
-let canvas2 = document.getElementById("model2");
-const renderer2 = new THREE.WebGLRenderer({ canvas: canvas2 });
-renderer2.setSize(canvas1.clientWidth, canvas1.clientHeight);
+let controls1;
+let controls2;
+let controls3;
 
-let canvas3 = document.getElementById("model3");
-const renderer3 = new THREE.WebGLRenderer({ canvas: canvas3 });
-renderer3.setSize(canvas1.clientWidth, canvas1.clientHeight);
+let loadingStatus = 0;
 
 for (let i = 0; i < 3; i++) {
   loadedModels.push(
-    loader.load(models[i], function (glb) {
-      const model = glb.scene;
-      model.position.y = -1.5;
-      model.scale.set(2, 1, 2);
-      scenes[i].add(model, new THREE.AmbientLight(0xffffff, 0.5));
-      scenes[i].background = background;
-    })
+    loader.load(
+      models[i],
+      function (glb) {
+        const model = glb.scene;
+        model.position.y = -1.5;
+        model.scale.set(2, 1, 2);
+        scenes[i].add(model, new THREE.AmbientLight(0xffffff, 0.5));
+        scenes[i].background = background;
+      },
+      function (xhr) {
+        loadingStatus = (xhr.loaded / xhr.total) * 100;
+        document.getElementById("loadingStatus").innerText =
+          "Loading character: " + " " + loadingStatus + "%";
+      }
+    )
   );
 }
 
-const controls1 = new OrbitControls(camera1, renderer1.domElement);
-const controls2 = new OrbitControls(camera2, renderer2.domElement);
-const controls3 = new OrbitControls(camera3, renderer3.domElement);
+function initialize() {
+  const interval = setInterval(checkCondition, 1000);
+
+  function checkCondition() {
+    let loaded = true;
+    for (let i = 0; i < 3; i++) if (!models[i]) loaded = false;
+
+    if (loaded) {
+      clearInterval(interval);
+      initMenu();
+    }
+  }
+}
+
+function initMenu() {
+  document.getElementById("loadingScreen").style.display = "none";
+  document.getElementById("showMenu").style.display = "block";
+
+  canvas1 = document.getElementById("model1");
+  renderer1 = new THREE.WebGLRenderer({ canvas: canvas1 });
+  renderer1.setSize(canvas1.clientWidth, canvas1.clientHeight);
+
+  canvas2 = document.getElementById("model2");
+  renderer2 = new THREE.WebGLRenderer({ canvas: canvas2 });
+  renderer2.setSize(canvas1.clientWidth, canvas1.clientHeight);
+
+  canvas3 = document.getElementById("model3");
+  renderer3 = new THREE.WebGLRenderer({ canvas: canvas3 });
+  renderer3.setSize(canvas1.clientWidth, canvas1.clientHeight);
+
+  controls1 = new OrbitControls(camera1, renderer1.domElement);
+  controls2 = new OrbitControls(camera2, renderer2.domElement);
+  controls3 = new OrbitControls(camera3, renderer3.domElement);
+
+  animate();
+}
 
 function animate() {
   requestAnimationFrame(animate);
@@ -86,4 +125,4 @@ function animate() {
   controls3.update();
 }
 
-animate();
+initialize();

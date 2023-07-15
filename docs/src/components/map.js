@@ -31,6 +31,8 @@ let buttonMeshes = {};
 
 const lights = {};
 
+let loadingStatus = 0;
+
 function initScene(mode) {
   if (!mode) {
     //to handle
@@ -350,10 +352,13 @@ function loadLightModel() {
   modelLoader.load(
     "./assets/ceilingLight.glb",
     function (glb) {
-      console.log("Loading ceiling lights");
       ceilingLight = glb.scene;
     },
-    null,
+    function (xhr) {
+      loadingStatus = (xhr.loaded / xhr.total) * 100;
+      document.getElementById("loadingStatus").innerText =
+        "Loading flashlight: " + " " + loadingStatus + "%";
+    },
     function (error) {
       console.error(error);
     }
@@ -361,12 +366,15 @@ function loadLightModel() {
   modelLoader.load(
     "./assets/lightbutton.glb",
     function (glb) {
-      console.log("Loading light buttons");
       lightButton = glb.scene;
       lightButton.scale.set(0.3, 0.3, 0.3);
       lightButton.rotateZ(Math.PI);
     },
-    null,
+    function (xhr) {
+      loadingStatus = (xhr.loaded / xhr.total) * 100;
+      document.getElementById("loadingStatus").innerText =
+        "Loading flashlight: " + " " + loadingStatus + "%";
+    },
     function (error) {
       console.log(error);
     }
@@ -436,7 +444,6 @@ function insertLights(scene) {
 }
 
 export function generateScene(scene, mode) {
-  console.log(mode);
   initScene(mode);
   maze(scene);
   floor(scene);

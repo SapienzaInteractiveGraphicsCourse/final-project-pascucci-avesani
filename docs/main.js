@@ -1,17 +1,14 @@
 import * as THREE from "three";
 import { generateScene } from "./src/components/map.js";
 import { Character } from "./src/components/character.js";
-import {
-  startTimer,
-  initTimer,
-  pauseTimer,
-} from "./src/controls/eventListeners.js";
+import { startTimer, initTimer } from "./src/controls/eventListeners.js";
 
 let character;
 let clock;
 let renderer;
 let scene, camera;
-let mode, chosen;
+let mode = 0,
+  chosen = 0;
 
 window.onresize = function () {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -21,7 +18,7 @@ window.onresize = function () {
 };
 
 function init() {
-  mode = chosen = 1;
+  //mode = chosen = 1;
   initTimer();
 
   document.getElementById("Start").onclick = function () {
@@ -29,9 +26,9 @@ function init() {
       document.getElementById("startMenu").style.display = "none";
       canvas.style.display = "block";
       handleButtonPressed("Start");
-    } else if (mode && !chosen) showAlert("Select a character first!");
-    else if (!mode && chosen) showAlert("Select a game mode first!");
-    else showAlert("Please select gamemode and character!");
+    } else if (mode && !chosen) alert("Select a character first!");
+    else if (!mode && chosen) alert("Select a game mode first!");
+    else alert("Please select gamemode and character!");
   };
 }
 
@@ -70,6 +67,8 @@ export function handleButtonPressed(element) {
   }
 }
 export function initGame() {
+  document.getElementById("canvas").style.display = "none";
+  document.getElementById("loadingScreen").style.display = "block";
   // Camera and scene setup
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
@@ -107,8 +106,6 @@ export function initGame() {
   const light = new THREE.PointLight(0xffffff, 1.0);
   light.position.set(-5.5, 7, -10);
   //scene.add(light);
-
-  startTimer();
 
   //scene.fog = new THREE.Fog(0x222222, 0, 10);
 }
