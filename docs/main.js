@@ -64,6 +64,7 @@ export function handleButtonPressed(element) {
     case "Start":
       initGame();
       animate();
+      break;
   }
 }
 export function initGame() {
@@ -84,9 +85,11 @@ export function initGame() {
   // Set game window size
   let canvas = document.getElementById("canvas");
   renderer = new THREE.WebGLRenderer({ canvas: canvas });
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize(window.innerWidth, window.innerHeight);
+  if (mode == 1) {
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  }
 
   // Create map
   generateScene(scene, mode);
@@ -108,8 +111,6 @@ export function initGame() {
   const light = new THREE.PointLight(0xffffff, 1.0);
   light.position.set(-5.5, 7, -10);
   //scene.add(light);
-
-  //scene.fog = new THREE.Fog(0x222222, 0, 10);
 }
 
 //Render loop

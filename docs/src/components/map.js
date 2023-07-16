@@ -33,8 +33,6 @@ let buttonMeshes = {};
 
 const lights = {};
 
-let loadingStatus = 0;
-
 function initScene(mode) {
   if (!mode) {
     //to handle
@@ -206,7 +204,7 @@ function initScene(mode) {
 }
 
 // Draw the maze
-function maze(scene) {
+function maze(scene, mode) {
   const height = 7;
   const width = 1;
 
@@ -259,7 +257,7 @@ function maze(scene) {
     new THREE.MeshBasicMaterial({ map: portalTexture })
   );
   endWallBackground.position.set(-mazeLength + 5, 3, -mazeLength - 1);
-  const portalLight = new THREE.PointLight(0x00ffff, 1, 10);
+  const portalLight = new THREE.PointLight(0x00ffff, 1, 8);
   portalLight.position.copy(invisibleWallEndMesh.position);
   portalLight.position.z += 2;
   scene.add(invisibleWallEndMesh);
@@ -346,6 +344,11 @@ function maze(scene) {
 
     // Create wall box
     wallMeshes[j].geometry.computeBoundingBox();
+
+    if (mode == 1) {
+      wallMeshes[j].castShadow = true;
+      wallMeshes[j].receiveShadow = true;
+    }
     scene.add(wallMeshes[j]);
   }
 }
@@ -395,8 +398,7 @@ function loadLightModel() {
     function (glb) {
       ceilingLight = glb.scene;
     },
-    function (weii) {
-      loadingStatus = (weii.loaded / weii.total) * 100;
+    function () {
       document.getElementById("loadingStatus").innerText =
         " loading ceiling light";
     },
@@ -411,8 +413,7 @@ function loadLightModel() {
       lightButton.scale.set(0.3, 0.3, 0.3);
       lightButton.rotateZ(Math.PI);
     },
-    function (xhr) {
-      loadingStatus = (xhr.loaded / xhr.total) * 100;
+    function () {
       document.getElementById("loadingStatus").innerText =
         " loading light switch button";
     },
@@ -487,7 +488,7 @@ function insertLights(scene, mode) {
 
 export function generateScene(scene, mode) {
   initScene(mode);
-  maze(scene);
+  maze(scene, mode);
   floor(scene);
   addLights(scene, mode);
 

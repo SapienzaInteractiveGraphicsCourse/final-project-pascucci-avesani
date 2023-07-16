@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { chosen } from "../../main.js";
 import { GLTFLoader } from "GLTFLoader";
-import { startTimer, initTimer } from "../controls/eventListeners.js";
+import { startTimer } from "../controls/eventListeners.js";
 let model, flashLight;
 
 // Define character
@@ -28,7 +28,7 @@ let currentTorsoRotation = 0;
 let spotlight = new THREE.SpotLight(0xffffff, 1, 20, Math.PI / 5, 0.9, 0.8);
 spotlight.position.set(-5, 2, -1);
 spotlight.name = "SpotLight";
-spotlight.castShadow = true;
+//spotlight.castShadow = true;
 
 export class CharacterAnimation {
   constructor(scene, characterCube) {
