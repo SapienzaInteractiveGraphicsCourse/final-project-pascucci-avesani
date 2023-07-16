@@ -87,7 +87,7 @@ export class Character extends CharacterAnimation {
     this.camera.position.copy(idealOffSet);
     this.camera.lookAt(idealLookAt);
 
-    if (this.group.position.z < -mazeLength - 2) {
+    if (this.group.position.z < -mazeLength - 1.2) {
       eventListener.loadWinMenu();
       document.documentElement.style.cursor = "auto";
       this.group.position.z = 0;
