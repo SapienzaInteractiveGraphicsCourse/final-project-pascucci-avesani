@@ -28,8 +28,7 @@ let currentTorsoRotation = 0;
 let spotlight = new THREE.SpotLight(0xffffff, 1, 20, Math.PI / 5, 0.9, 0.8);
 spotlight.position.set(-5, 2, -1);
 spotlight.name = "SpotLight";
-
-let loadingStatus = 0;
+spotlight.castShadow = true;
 
 export class CharacterAnimation {
   constructor(scene, characterCube) {
@@ -77,6 +76,12 @@ export class CharacterAnimation {
       models[chosen],
       function (gltf) {
         model = gltf.scene;
+        model.traverse(function (node) {
+          if (node.isMesh) {
+            node.castShadow = true;
+            node.receiveShadow = false;
+          }
+        });
         // Set the desired scale for the model
         group.add(model, characterCube);
         group.scale.set(desiredScale, desiredScale, desiredScale);
@@ -84,8 +89,7 @@ export class CharacterAnimation {
         group.position.set(-5, 0, -4);
         scene.add(group);
       },
-      function (xhr) {
-        loadingStatus = (xhr.loaded / xhr.total) * 100;
+      function () {
         document.getElementById("loadingStatus").innerText =
           " loading character";
       },
@@ -112,8 +116,7 @@ export class CharacterAnimation {
         for (let i = 1; i < 6; i++)
           model.getObjectByName("RightHand").children[i].rotateX(2);
       },
-      function (xhr) {
-        loadingStatus = (xhr.loaded / xhr.total) * 100;
+      function () {
         document.getElementById("loadingStatus").innerText =
           " loading flashlight";
       },

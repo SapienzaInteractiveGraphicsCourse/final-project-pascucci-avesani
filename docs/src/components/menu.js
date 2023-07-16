@@ -54,8 +54,6 @@ let controls1;
 let controls2;
 let controls3;
 
-let loadingStatus = 0;
-
 for (let i = 0; i < 3; i++) {
   loadedModels.push(
     loader.load(
@@ -68,7 +66,6 @@ for (let i = 0; i < 3; i++) {
         scenes[i].background = background;
       },
       function (xhr) {
-        loadingStatus = (xhr.loaded / xhr.total) * 100;
         document.getElementById("loadingStatus").innerText =
           " loading character";
       }

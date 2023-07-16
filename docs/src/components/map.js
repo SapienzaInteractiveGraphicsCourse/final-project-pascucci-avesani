@@ -227,36 +227,45 @@ function maze(scene) {
   startLight.position.copy(invisibleWallStartMesh.position);
   scene.add(startLight);
 
-
-  endWallMaterial = new THREE.MeshStandardMaterial({ color: 0xffd700, transparent: true, side: THREE.DoubleSide, alphaTest: 0.5 });
+  endWallMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffd700,
+    transparent: true,
+    side: THREE.DoubleSide,
+    alphaTest: 0.5,
+  });
 
   endWallMaterial.alphaMap = portalTexture;
   endWallMaterial.alphaMap.magFilter = THREE.NearestFilter;
 
-  endWallMaterial2 = new THREE.MeshStandardMaterial({ color: 0x00ffff, transparent: true, side: THREE.DoubleSide, alphaTest: 0.5 });
+  endWallMaterial2 = new THREE.MeshStandardMaterial({
+    color: 0x00ffff,
+    transparent: true,
+    side: THREE.DoubleSide,
+    alphaTest: 0.5,
+  });
 
   endWallMaterial2.alphaMap = portalTexture;
   endWallMaterial2.alphaMap.magFilter = THREE.NearestFilter;
 
-  invisibleWallEndMesh = new THREE.Mesh(
-    invisibleWallGeometry,
-    endWallMaterial
-  );
+  invisibleWallEndMesh = new THREE.Mesh(invisibleWallGeometry, endWallMaterial);
   invisibleWallEndMesh.position.set(-mazeLength + 5, 3, -mazeLength);
   invisibleWallEndMesh2 = new THREE.Mesh(
     invisibleWallGeometry,
     endWallMaterial2
   );
-  invisibleWallEndMesh2.position.set(-mazeLength + 5, 3, -mazeLength+0.5);
-  const endWallBackground = new THREE.Mesh(invisibleWallGeometry, new THREE.MeshBasicMaterial({map: portalTexture}));
-  endWallBackground.position.set(-mazeLength + 5, 3, -mazeLength-1);
+  invisibleWallEndMesh2.position.set(-mazeLength + 5, 3, -mazeLength + 0.5);
+  const endWallBackground = new THREE.Mesh(
+    invisibleWallGeometry,
+    new THREE.MeshBasicMaterial({ map: portalTexture })
+  );
+  endWallBackground.position.set(-mazeLength + 5, 3, -mazeLength - 1);
   const portalLight = new THREE.PointLight(0x00ffff, 1, 10);
   portalLight.position.copy(invisibleWallEndMesh.position);
   portalLight.position.z += 2;
   scene.add(invisibleWallEndMesh);
   scene.add(invisibleWallEndMesh2);
   scene.add(portalLight);
-  scene.add(endWallBackground)
+  scene.add(endWallBackground);
 
   coordinatesArray.push(0, 0, 10, 0);
 
@@ -355,6 +364,8 @@ function floor(scene) {
   floorMesh.rotation.x = Math.PI / 2; // Rotate the floor to be horizontal
   floorMesh.position.x = -mazeLength / 2;
   floorMesh.position.z = -mazeLength / 2;
+  floorMesh.castShadow = false;
+  floorMesh.receiveShadow = true;
   scene.add(floorMesh);
 
   const ceilingGeometry = new THREE.BoxGeometry(
@@ -411,18 +422,18 @@ function loadLightModel() {
   );
 }
 
-function addLights(scene) {
+function addLights(scene, mode) {
   const interval = setInterval(checkCondition, 1000);
   loadLightModel(scene);
   function checkCondition() {
     if (ceilingLight && lightButton) {
       clearInterval(interval);
-      insertLights(scene);
+      insertLights(scene, mode);
     }
   }
 }
 
-function insertLights(scene) {
+function insertLights(scene, mode) {
   const height = 6.5;
   const light = new THREE.PointLight(0xffffff, 0.5, 20);
   const positions = [];
@@ -468,6 +479,7 @@ function insertLights(scene) {
 
       lights[i] = light.clone();
       lights[i].position.set(xPosition, height, zPosition);
+      if (mode == 1) lights[i].castShadow = true;
       scene.add(lights[i]);
     }
   }
@@ -477,7 +489,7 @@ export function generateScene(scene, mode) {
   initScene(mode);
   maze(scene);
   floor(scene);
-  addLights(scene);
+  addLights(scene, mode);
 
   scene.background = background;
 }
@@ -496,7 +508,6 @@ export function isLightSwichColliding(box) {
     }
   }
 }
-
 
 const clock = new THREE.Clock();
 // Calculate if a given box is colliding with Map objects
@@ -518,7 +529,7 @@ export function isMazeWallColliding(box) {
   startWallBox
     .copy(invisibleWallStartMesh.geometry.boundingBox)
     .applyMatrix4(invisibleWallStartMesh.matrixWorld);
-  
+
   invisibleWallEndMesh2.rotateZ(clock.getDelta() * 2);
   invisibleWallEndMesh.rotateZ(clock.getDelta());
 

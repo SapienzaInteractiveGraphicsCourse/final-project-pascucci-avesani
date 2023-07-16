@@ -84,6 +84,8 @@ export function initGame() {
   // Set game window size
   let canvas = document.getElementById("canvas");
   renderer = new THREE.WebGLRenderer({ canvas: canvas });
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   // Create map
