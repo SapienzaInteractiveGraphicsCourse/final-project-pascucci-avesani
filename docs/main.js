@@ -100,17 +100,8 @@ export function initGame() {
   // Create character
   character = new Character(scene, camera);
 
-  // Create a directional light
-  let dirlight = new THREE.DirectionalLight(0xffffff, 0.7);
-  dirlight.position.set(100, 100, 100);
-  //scene.add(dirlight);
-
   let ambient = new THREE.AmbientLight(0xffffff, 0.001);
   scene.add(ambient);
-
-  const light = new THREE.PointLight(0xffffff, 1.0);
-  light.position.set(-5.5, 7, -10);
-  //scene.add(light);
 }
 
 //Render loop
