@@ -242,14 +242,14 @@ function maze(scene) {
     invisibleWallGeometry,
     endWallMaterial
   );
-  invisibleWallEndMesh.position.set(-mazeLength + 5, 3, -mazeLength-1);
+  invisibleWallEndMesh.position.set(-mazeLength + 5, 3, -mazeLength);
   invisibleWallEndMesh2 = new THREE.Mesh(
     invisibleWallGeometry,
     endWallMaterial2
   );
-  invisibleWallEndMesh2.position.set(-mazeLength + 5, 3, -mazeLength-0.5);
+  invisibleWallEndMesh2.position.set(-mazeLength + 5, 3, -mazeLength+0.5);
   const endWallBackground = new THREE.Mesh(invisibleWallGeometry, new THREE.MeshBasicMaterial({map: portalTexture}));
-  endWallBackground.position.set(-mazeLength + 5, 3, -mazeLength-2);
+  endWallBackground.position.set(-mazeLength + 5, 3, -mazeLength-1);
   const portalLight = new THREE.PointLight(0x00ffff, 1, 10);
   portalLight.position.copy(invisibleWallEndMesh.position);
   portalLight.position.z += 2;
