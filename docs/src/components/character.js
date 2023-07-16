@@ -96,7 +96,6 @@ export class Character extends CharacterAnimation {
     flashlight = this.group.getObjectByName("SpotLight");
     if (flashlight)
       flashlight.target.position.set(idealLookAt.x, 1.5, idealLookAt.z);
-
   }
 
   handleCollision(controlObject, oldPosition) {
@@ -213,10 +212,14 @@ export class Character extends CharacterAnimation {
     if (this.isJumping) {
       this.jumpHeight += this.jumpSpeed;
       group.position.y = Math.sin(this.jumpHeight) * 4; // Adjust the jump height and speed here
+
+      if (flashlight) flashlight.target.position.y = 1.5 - group.position.y;
+
       if (this.jumpHeight >= Math.PI) {
         this.isJumping = false;
         this.jumpHeight = 0;
         group.position.y = 0;
+        if (flashlight) flashlight.target.position.y = 1.5;
       }
     }
   }
