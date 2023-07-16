@@ -21,7 +21,7 @@ Click here to play the demo of the game [Game demo link](https://sapienzainterac
 
 # Documentation
 
-Please read the Report.pdf file.
+Please read the [Report.pdf](report.pdf) file.
 
 # Authors:
 
