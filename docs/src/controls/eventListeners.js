@@ -60,7 +60,7 @@ document.getElementById("Hard").onclick = function () {
 };
 document.getElementById("v1").onclick = function () {
   document.getElementById("character").innerText = "Character: \n DAVID";
-  document.getElementById("col-model-1").style.backgroundColor = "green";
+  document.getElementById("col-model-1").style.backgroundColor = "orangered";
   document.getElementById("col-model-2").style.backgroundColor = "transparent";
   document.getElementById("col-model-3").style.backgroundColor = "transparent";
   handleButtonPressed("v1");
@@ -68,7 +68,7 @@ document.getElementById("v1").onclick = function () {
 document.getElementById("v2").onclick = function () {
   document.getElementById("character").innerText = "Character: \n SIMON";
   document.getElementById("col-model-1").style.backgroundColor = "transparent";
-  document.getElementById("col-model-2").style.backgroundColor = "green";
+  document.getElementById("col-model-2").style.backgroundColor = "orangered";
   document.getElementById("col-model-3").style.backgroundColor = "transparent";
   handleButtonPressed("v2");
 };
@@ -76,7 +76,7 @@ document.getElementById("v3").onclick = function () {
   document.getElementById("character").innerText = "Character: \n ASIA";
   document.getElementById("col-model-1").style.backgroundColor = "transparent";
   document.getElementById("col-model-2").style.backgroundColor = "transparent";
-  document.getElementById("col-model-3").style.backgroundColor = "green";
+  document.getElementById("col-model-3").style.backgroundColor = "orangered";
   handleButtonPressed("v3");
 };
 document.getElementById("Resume").onclick = function () {

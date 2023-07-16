@@ -25,8 +25,8 @@ let currentArmRotation = 0;
 let currentHeadRotation = 0;
 let currentTorsoRotation = 0;
 
-let spotlight = new THREE.SpotLight(0xffffff, 0);
-spotlight.position.set(-5, 0, -4);
+let spotlight = new THREE.SpotLight(0xffffff, 1, 20, Math.PI / 5, 0.9, 0.8);
+spotlight.position.set(-5, 2, -1);
 spotlight.name = "SpotLight";
 
 let loadingStatus = 0;
